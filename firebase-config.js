@@ -1,20 +1,16 @@
-
-// firebase-config.js
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
+// Configuración de Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyBIjWVGYWnu7VH6sliEtFToJPwP8dxV74w",
-  authDomain: "portfolio-web-af46f.firebaseapp.com",
-  projectId: "portfolio-web-af46f",
-  storageBucket: "portfolio-web-af46f.firebasestorage.app",
-  messagingSenderId: "362528992591",
-  appId: "1:362528992591:web:12ec29460f59fe1974693a"
+    apiKey: "AIzaSy...",
+    authDomain: "portfolio-jhorman.firebaseapp.com",
+    projectId: "portfolio-jhorman",
+    storageBucket: "portfolio-jhorman.appspot.com",
+    messagingSenderId: "1234567890",
+    appId: "1:1234567890:web:abcdef123456789"
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+// Inicializar Firebase
+firebase.initializeApp(firebaseConfig);
 
-export { auth, db, signInWithEmailAndPassword, signOut, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy };
+// Inicializar servicios
+const db = firebase.firestore();
+const auth = firebase.auth();
