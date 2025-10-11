@@ -3,172 +3,528 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mis Webs - Portfolio</title>
-    <meta name="description" content="Portfolio de proyectos web de Jhorman Jesús Castellanos Morales">
-    <meta name="author" content="Jhorman Jesús Castellanos Morales">
-    
-    <!-- Favicon opcional -->
-    <link rel="icon" type="image/svg+xml" href="image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🌐</text></svg>">
-    
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-    
-    <!-- Estilos -->
-    <link rel="stylesheet" href="style.css">
+    <title>Mis Webs - Portafolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #6b8cbc;
+            --dark-color: #333;
+            --light-color: #f4f4f4;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark-color);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .admin-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+        .admin-btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 4rem 0;
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Projects Section */
+        .projects {
+            padding: 4rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 2rem;
+            color: var(--dark-color);
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .project-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .project-image {
+            height: 180px;
+            background-color: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .project-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .project-content {
+            padding: 1.5rem;
+        }
+
+        .project-title {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark-color);
+        }
+
+        .project-description {
+            color: #666;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .project-links {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .project-link {
+            display: inline-flex;
+            align-items: center;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .project-link i {
+            margin-right: 0.5rem;
+        }
+
+        /* Admin Panel */
+        .admin-panel {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .admin-content {
+            background-color: white;
+            width: 90%;
+            max-width: 800px;
+            margin: 2rem auto;
+            border-radius: 8px;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--dark-color);
+        }
+
+        .admin-title {
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .submit-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+        .submit-btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--primary-color);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+            }
+
+            .nav-links {
+                margin-top: 1rem;
+            }
+
+            .nav-links li {
+                margin: 0 0.5rem;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="header-container">
-        <h1>🌐 Mis Webs
-            <button class="theme-toggle" id="themeToggle" aria-label="Cambiar modo claro/oscuro">🌓</button>
-            <button class="admin-toggle" id="adminToggle" aria-label="Panel de administración">⚙️</button>
-        </h1>
-        <p class="subtitle">Portfolio de proyectos web personales</p>
-    </div>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">Mis Webs</div>
+                <ul class="nav-links">
+                    <li><a href="#projects">Proyectos</a></li>
+                    <li><a href="#about">Acerca de</a></li>
+                    <li><button class="admin-btn" id="adminBtn">Panel Admin</button></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
-    <div class="main-content">
-        <div class="controls-container">
-            <input type="text" class="search-bar" id="searchBar" placeholder="🔍 Buscar proyecto...">
-            <div class="filter-buttons">
-                <button class="filter-btn active" data-filter="all">Todos</button>
-                <button class="filter-btn" data-filter="tool">🔧 Herramientas</button>
-                <button class="filter-btn" data-filter="map">🗺️ Mapas</button>
-                <button class="filter-btn" data-filter="fun">🎮 Entretenimiento</button>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Portafolio de Proyectos Web</h1>
+            <p>Recopilación de las webs que he estado realizando</p>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section class="projects" id="projects">
+        <div class="container">
+            <h2 class="section-title">Mis Proyectos</h2>
+            <div class="projects-grid" id="projectsGrid">
+                <div class="loading">
+                    <i class="fas fa-spinner fa-spin"></i> Cargando proyectos...
+                </div>
             </div>
         </div>
+    </section>
 
-        <div class="project-counter">
-            <span id="projectCount">Cargando proyectos...</span>
+    <!-- Admin Panel -->
+    <div class="admin-panel" id="adminPanel">
+        <div class="admin-content">
+            <button class="close-btn" id="closeAdmin">&times;</button>
+            <h2 class="admin-title">Panel de Administración</h2>
+            <form id="projectForm">
+                <div class="form-group">
+                    <label for="name">Nombre del Proyecto</label>
+                    <input type="text" id="name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Descripción</label>
+                    <textarea id="description" class="form-control" rows="3" required></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="category">Categoría</label>
+                        <input type="text" id="category" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="createdAt">Fecha de Creación</label>
+                        <input type="date" id="createdAt" class="form-control" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="github">URL de GitHub</label>
+                    <input type="url" id="github" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="url">URL del Proyecto</label>
+                    <input type="url" id="url" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="icon">URL del Icono/Imagen</label>
+                    <input type="url" id="icon" class="form-control" required>
+                </div>
+                <button type="submit" class="submit-btn">Agregar Proyecto</button>
+            </form>
         </div>
-        
-        <div class="website-grid" id="websiteGrid">
-            <!-- Los proyectos se cargarán dinámicamente desde Firebase -->
-        </div>
-
-        <div class="no-results" id="noResults">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M19.5 12c0-1.58-.47-3.04-1.28-4.26l-1.42 1.42A5.5 5.5 0 1 1 12 6.5c1.03 0 1.99.28 2.82.77l1.42-1.42A7.474 7.474 0 0 0 12 4.5a7.5 7.5 0 1 0 7.5 7.5zM12 20a8 8 0 1 1 0-16 8 8 0 0 1 0 16z"/>
-            </svg>
-            <h3>No se encontraron proyectos</h3>
-            <p>Intenta con otros términos de búsqueda</p>
-        </div>
-    </div>
-
-    <!-- === CONTADOR DE VISITAS === -->
-    <div class="visit-counter-container">
-        <div id="sfcuascp95sxjzn8axqnrw65ahq89hb12pw"></div>
-        <script type="text/javascript" src="https://counter1.optistats.ovh/private/counter.js?c=uascp95sxjzn8axqnrw65ahq89hb12pw&down=async" async></script>
-        <noscript>
-            <a href="https://www.contadorvisitasgratis.com" title="contador de visitas">
-                <img src="https://counter1.optistats.ovh/private/contadorvisitasgratis.php?c=uascp95sxjzn8axqnrw65ahq89hb12pw" 
-                     border="0" 
-                     alt="contador de visitas" 
-                     style="width:1px; height:1px; opacity:0.1;">
-            </a>
-        </noscript>
     </div>
 
     <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-name">👨‍💻 Jhorman Jesús Castellanos Morales</div>
-            
-            <div class="footer-social">
-                <a href="https://github.com/Jhormancastella" target="_blank" rel="noopener noreferrer" class="social-link" title="GitHub">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                    </svg>
-                </a>
-                <a href="mailto:jhormancastella@gmail.com" class="social-link" title="Email">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-                    </svg>
-                </a>
-                <a href="https://linkedin.com/in/jhormancastella" target="_blank" rel="noopener noreferrer" class="social-link" title="LinkedIn">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-                    </svg>
-                </a>
-            </div>
-
-            <div class="footer-info">
-                <p>Desarrollador Web Full Stack | Apasionado por crear experiencias digitales únicas</p>
-            </div>
-
-            <div class="footer-year">
-                © <span id="currentYear"></span> Todos los derechos reservados | Hecho con ❤️
-            </div>
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Mis Webs - Todos los derechos reservados</p>
         </div>
     </footer>
 
-    <div class="scroll-top" id="scrollTop">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/>
-        </svg>
-    </div>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
 
-    <!-- Modal de proyecto -->
-    <div class="modal" id="websiteModal" role="dialog" aria-modal="true">
-        <div class="modal-content">
-            <img class="modal-icon" id="modalIcon" alt="Icono del sitio web">
-            <h2 class="modal-title" id="modalTitle">Título</h2>
-            <p class="modal-description" id="modalDescription">Descripción del sitio web...</p>
-            <div class="modal-buttons">
-                <button type="button" class="modal-btn btn-close" onclick="closeModal()">Cerrar</button>
-                <button type="button" class="modal-btn btn-visit" onclick="visitWebsite()">Ir al Sitio</button>
-            </div>
-        </div>
-    </div>
+    <script>
+        // Configuración de Firebase (debes reemplazar con tu configuración)
+        const firebaseConfig = {
+            apiKey: "tu-api-key",
+            authDomain: "tu-proyecto.firebaseapp.com",
+            projectId: "tu-proyecto-id",
+            storageBucket: "tu-proyecto.appspot.com",
+            messagingSenderId: "tu-sender-id",
+            appId: "tu-app-id"
+        };
 
-    <!-- Modal de autenticación -->
-    <div class="modal" id="authModal" role="dialog" aria-modal="true">
-        <div class="modal-content">
-            <h2 class="modal-title">Acceso de Administrador</h2>
-            <div class="auth-form">
-                <input type="password" id="adminPassword" class="search-bar" placeholder="Contraseña">
-                <div class="modal-buttons">
-                    <button type="button" class="modal-btn btn-close" onclick="closeAuthModal()">Cancelar</button>
-                    <button type="button" class="modal-btn btn-visit" onclick="authenticate()">Acceder</button>
-                </div>
-            </div>
-        </div>
-    </div>
+        // Inicializar Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
 
-    <!-- Panel de administración -->
-    <div class="admin-panel" id="adminPanel">
-        <div class="admin-header">
-            <h2>Panel de Administración</h2>
-            <button class="admin-close" id="adminClose">✕</button>
-        </div>
-        <div class="admin-content">
-            <div class="admin-section">
-                <h3>Agregar Nuevo Proyecto</h3>
-                <div class="admin-form">
-                    <input type="text" id="projectName" class="admin-input" placeholder="Nombre del proyecto">
-                    <input type="text" id="projectUrl" class="admin-input" placeholder="URL del proyecto">
-                    <input type="text" id="projectIcon" class="admin-input" placeholder="URL del icono">
-                    <input type="text" id="projectGithub" class="admin-input" placeholder="URL del repositorio GitHub">
-                    <textarea id="projectDescription" class="admin-textarea" placeholder="Descripción del proyecto"></textarea>
-                    <select id="projectCategory" class="admin-select">
-                        <option value="tool">🔧 Herramientas</option>
-                        <option value="map">🗺️ Mapas</option>
-                        <option value="fun">🎮 Entretenimiento</option>
-                    </select>
-                    <button type="button" class="modal-btn btn-visit" onclick="addProject()">Agregar Proyecto</button>
-                </div>
-            </div>
-            <div class="admin-section">
-                <h3>Proyectos Existentes</h3>
-                <div class="projects-list" id="projectsList">
-                    <!-- Los proyectos se cargarán aquí -->
-                </div>
-            </div>
-        </div>
-    </div>
+        // Referencias a elementos del DOM
+        const adminBtn = document.getElementById('adminBtn');
+        const adminPanel = document.getElementById('adminPanel');
+        const closeAdmin = document.getElementById('closeAdmin');
+        const projectForm = document.getElementById('projectForm');
+        const projectsGrid = document.getElementById('projectsGrid');
 
-    <!-- Scripts -->
-    <script src="firebase-config.js"></script>
-    <script src="main.js"></script>
+        // Mostrar/ocultar panel de administración
+        adminBtn.addEventListener('click', () => {
+            adminPanel.style.display = 'block';
+        });
+
+        closeAdmin.addEventListener('click', () => {
+            adminPanel.style.display = 'none';
+        });
+
+        // Cerrar panel al hacer clic fuera del contenido
+        adminPanel.addEventListener('click', (e) => {
+            if (e.target === adminPanel) {
+                adminPanel.style.display = 'none';
+            }
+        });
+
+        // Agregar proyecto a Firebase
+        projectForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const description = document.getElementById('description').value;
+            const category = document.getElementById('category').value;
+            const createdAt = document.getElementById('createdAt').value;
+            const github = document.getElementById('github').value;
+            const url = document.getElementById('url').value;
+            const icon = document.getElementById('icon').value;
+            
+            try {
+                await db.collection('projects').add({
+                    name,
+                    description,
+                    category,
+                    createdAt: new Date(createdAt),
+                    github,
+                    url,
+                    icon
+                });
+                
+                alert('Proyecto agregado exitosamente!');
+                projectForm.reset();
+                adminPanel.style.display = 'none';
+                loadProjects(); // Recargar proyectos
+            } catch (error) {
+                console.error('Error agregando proyecto: ', error);
+                alert('Error al agregar proyecto. Inténtalo de nuevo.');
+            }
+        });
+
+        // Cargar proyectos desde Firebase
+        async function loadProjects() {
+            try {
+                const querySnapshot = await db.collection('projects').orderBy('createdAt', 'desc').get();
+                projectsGrid.innerHTML = '';
+                
+                if (querySnapshot.empty) {
+                    projectsGrid.innerHTML = '<p class="loading">No hay proyectos para mostrar.</p>';
+                    return;
+                }
+                
+                querySnapshot.forEach((doc) => {
+                    const project = doc.data();
+                    const projectCard = document.createElement('div');
+                    projectCard.className = 'project-card';
+                    
+                    // Formatear fecha
+                    const date = project.createdAt.toDate();
+                    const formattedDate = date.toLocaleDateString('es-ES', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    });
+                    
+                    projectCard.innerHTML = `
+                        <div class="project-image">
+                            <img src="${project.icon}" alt="${project.name}" onerror="this.src='https://via.placeholder.com/300x180?text=Imagen+No+Disponible'">
+                        </div>
+                        <div class="project-content">
+                            <h3 class="project-title">${project.name}</h3>
+                            <p class="project-description">${project.description}</p>
+                            <div class="project-meta">
+                                <small><strong>Categoría:</strong> ${project.category}</small><br>
+                                <small><strong>Creado:</strong> ${formattedDate}</small>
+                            </div>
+                            <div class="project-links">
+                                <a href="${project.github}" target="_blank" class="project-link">
+                                    <i class="fab fa-github"></i> GitHub
+                                </a>
+                                <a href="${project.url}" target="_blank" class="project-link">
+                                    <i class="fas fa-external-link-alt"></i> Ver Proyecto
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                    
+                    projectsGrid.appendChild(projectCard);
+                });
+            } catch (error) {
+                console.error('Error cargando proyectos: ', error);
+                projectsGrid.innerHTML = '<p class="loading">Error al cargar los proyectos.</p>';
+            }
+        }
+
+        // Cargar proyectos al iniciar
+        document.addEventListener('DOMContentLoaded', loadProjects);
+    </script>
 </body>
 </html>
