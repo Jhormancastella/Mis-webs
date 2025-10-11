@@ -1,7 +1,40 @@
-import { auth, db, signInWithEmailAndPassword, signOut, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy } from './firebase-config.js';
+// admin.js - Versión simplificada: autenticación local con sessionStorage
+import { db, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy } from './firebase-config.js';
 
 let editingId = null;
 
+// Verificar si ya inició sesión
+if (sessionStorage.getItem('adminLoggedIn') === 'true') {
+  document.getElementById('authSection').style.display = 'none';
+  document.getElementById('adminSection').style.display = 'block';
+  loadProjects();
+} else {
+  document.getElementById('adminSection').style.display = 'none';
+}
+
+// === Función de login local ===
+function login() {
+  const password = document.getElementById('password').value;
+  if (password === 'Rosy123') {
+    sessionStorage.setItem('adminLoggedIn', 'true');
+    document.getElementById('authSection').style.display = 'none';
+    document.getElementById('adminSection').style.display = 'block';
+    loadProjects();
+  } else {
+    alert('❌ Contraseña incorrecta');
+  }
+}
+
+// === Cerrar sesión ===
+function logout() {
+  sessionStorage.removeItem('adminLoggedIn');
+  document.getElementById('adminSection').style.display = 'none';
+  document.getElementById('authSection').style.display = 'block';
+  editingId = null;
+  document.getElementById('password').value = '';
+}
+
+// === Guardar o actualizar proyecto ===
 document.getElementById('projectForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const project = {
@@ -18,82 +51,51 @@ document.getElementById('projectForm').addEventListener('submit', async (e) => {
     if (editingId) {
       await updateDoc(doc(db, "projects", editingId), project);
       editingId = null;
+      alert('✅ Proyecto actualizado');
     } else {
       await addDoc(collection(db, "projects"), project);
+      alert('✅ Proyecto agregado');
     }
-    alert('✅ Proyecto guardado');
     document.getElementById('projectForm').reset();
     loadProjects();
   } catch (err) {
-    console.error(err);
-    alert('❌ Error al guardar: ' + (err.message || 'Desconocido'));
+    console.error('Error al guardar:', err);
+    alert('❌ No se pudo guardar el proyecto. Revisa la consola.');
   }
 });
 
-async function login() {
-  const password = document.getElementById('password').value;
-  if (!password) {
-    alert('⚠️ Por favor ingresa la contraseña');
-    return;
-  }
-
-  // Validar localmente (opcional, pero útil para evitar llamadas innecesarias)
-  if (password !== 'Rosy123') {
-    alert('❌ Contraseña incorrecta');
-    return;
-  }
-
-  try {
-    // Intentar iniciar sesión con Firebase
-    await signInWithEmailAndPassword(auth, 'admin@portfolio.com', password);
-    document.getElementById('authSection').style.display = 'none';
-    document.getElementById('adminSection').style.display = 'block';
-    loadProjects();
-  } catch (err) {
-    console.error('Error de Firebase:', err);
-    if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password') {
-      alert('❌ Contraseña incorrecta');
-    } else if (err.code === 'auth/user-not-found') {
-      alert('❌ Usuario no registrado. Contacta al administrador.');
-    } else {
-      alert('❌ Error: ' + err.message);
-    }
-  }
-}
-
-function logout() {
-  signOut(auth).then(() => {
-    document.getElementById('authSection').style.display = 'block';
-    document.getElementById('adminSection').style.display = 'none';
-    editingId = null;
-    document.getElementById('password').value = '';
-  }).catch(console.error);
-}
-
+// === Cargar proyectos desde Firestore ===
 async function loadProjects() {
   try {
     const q = query(collection(db, "projects"), orderBy("createdAt", "desc"));
     const snapshot = await getDocs(q);
     const list = document.getElementById('projectsList');
-    list.innerHTML = snapshot.empty
-      ? '<p>📭 No hay proyectos aún.</p>'
-      : snapshot.docs.map(doc => {
-          const p = doc.data();
-          return `
-            <div class="project-item">
-              <strong>${p.title}</strong> (${p.category})<br>
-              ${p.description}<br>
-              <button type="button" onclick="editProject('${doc.id}')">✏️ Editar</button>
-              <button type="button" onclick="deleteProject('${doc.id}')">🗑️ Eliminar</button>
-            </div>
-          `;
-        }).join('');
+    
+    if (snapshot.empty) {
+      list.innerHTML = '<p>📭 No hay proyectos aún.</p>';
+      return;
+    }
+
+    list.innerHTML = '';
+    snapshot.forEach(doc => {
+      const p = doc.data();
+      const div = document.createElement('div');
+      div.className = 'project-item';
+      div.innerHTML = `
+        <strong>${p.title}</strong> (${p.category})<br>
+        ${p.description}<br>
+        <button type="button" onclick="editProject('${doc.id}')">✏️ Editar</button>
+        <button type="button" onclick="deleteProject('${doc.id}')">🗑️ Eliminar</button>
+      `;
+      list.appendChild(div);
+    });
   } catch (err) {
-    console.error(err);
-    document.getElementById('projectsList').innerHTML = '❌ Error al cargar proyectos';
+    console.error('Error al cargar:', err);
+    document.getElementById('projectsList').innerHTML = '❌ Error de conexión con Firebase';
   }
 }
 
+// === Editar proyecto ===
 window.editProject = async (id) => {
   const snapshot = await getDocs(collection(db, "projects"));
   const found = snapshot.docs.find(d => d.id === id);
@@ -109,13 +111,16 @@ window.editProject = async (id) => {
   }
 };
 
+// === Eliminar proyecto ===
 window.deleteProject = async (id) => {
   if (confirm('⚠️ ¿Eliminar este proyecto?')) {
     try {
       await deleteDoc(doc(db, "projects", id));
+      alert('🗑️ Proyecto eliminado');
       loadProjects();
     } catch (err) {
-      alert('❌ Error al eliminar');
+      console.error('Error al eliminar:', err);
+      alert('❌ No se pudo eliminar');
     }
   }
 };
