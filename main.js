@@ -119,13 +119,18 @@ function loadProjects() {
     const websiteGrid = document.getElementById('websiteGrid');
     websiteGrid.innerHTML = '<div class="loading">Cargando proyectos...</div>';
 
+    console.log("🔍 Cargando proyectos desde Firestore...");
+
     db.collection('projects').orderBy('createdAt', 'desc').get()
         .then((querySnapshot) => {
+            console.log("✅ Proyectos cargados:", querySnapshot.size);
             projects = [];
             querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                console.log("📄 Documento:", doc.id, data);
                 projects.push({
                     id: doc.id,
-                    ...doc.data()
+                    ...data
                 });
             });
             
@@ -137,7 +142,8 @@ function loadProjects() {
             }
         })
         .catch((error) => {
-            console.error("Error cargando proyectos: ", error);
+            console.error("❌ Error cargando proyectos: ", error);
+            console.error("Detalles:", error.code, error.message);
             websiteGrid.innerHTML = '<div class="no-results show">Error cargando proyectos</div>';
         });
 }
@@ -145,6 +151,8 @@ function loadProjects() {
 // Renderizar proyectos en la cuadrícula
 function renderProjects(projects) {
     const websiteGrid = document.getElementById('websiteGrid');
+    
+    console.log("🎨 Renderizando proyectos:", projects.length);
     
     if (projects.length === 0) {
         websiteGrid.innerHTML = '<div class="no-results show">No hay proyectos disponibles</div>';
@@ -160,7 +168,7 @@ function renderProjects(projects) {
         card.style.animationDelay = `${(index % 6) * 0.1 + 0.1}s`;
         
         card.innerHTML = `
-            <img class="favicon loading" alt="${project.name}" src="${project.icon}">
+            <img class="favicon loading" alt="${project.name}" src="${project.icon}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzk5OSI+PHBhdGggZD0iTTMuOSAxMmMwLTEuNzEgMS4zOS0zLjEgMy4xLTMuMWg0VjdIN2MtMi43NiAwLTUgMi4yNC01IDVzMi4yNCA1IDUgNWg0di0xLjlIN2MtMS43MSAwLTMuMS0xLjM5LTMuMS0zLjF6TTggMTNoOHYtMkg4djJ6TTE5IDdoLTR2MS45aDRjMS43MSAwIDMuMSAxLjM5IDMuMSAzLjFzLTEuMzkgMy4xLTMuMSAzLjFoLTR2Mmg0YzIuNzYgMCA1LTIuMjQgNS01cy0yLjI0LTUtNS01eiIvPjwvc3ZnPg=='">
             <div class="website-name">${project.name}</div>
             <div class="website-description">${project.description}</div>
             <div class="status">Cargando...</div>
@@ -199,7 +207,7 @@ function loadFavicon(faviconElement, mainSrc, fallbackSrc, statusElement) {
             statusElement.style.color = '#f39c12';
         };
         fallbackImg.onerror = () => {
-            faviconElement.src = 'image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzk5OSI+PHBhdGggZD0iTTMuOSAxMmMwLTEuNzEgMS4zOS0zLjEgMy4xLTMuMWg0VjdIN2MtMi43NiAwLTUgMi4yNC01IDVzMi4yNCA1IDUgNWg0di0xLjlIN2MtMS43MSAwLTMuMS0xLjM5LTMuMS0zLjF6TTggMTNoOHYtMkg4djJ6TTE5IDdoLTR2MS45aDRjMS43MSAwIDMuMSAxLjM5IDMuMSAzLjFzLTEuMzkgMy4xLTMuMSAzLjFoLTR2Mmg0YzIuNzYgMCA1LTIuMjQgNS01cy0yLjI0LTUtNS01eiIvPjwvc3ZnPg==';
+            faviconElement.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzk5OSI+PHBhdGggZD0iTTMuOSAxMmMwLTEuNzEgMS4zOS0zLjEgMy4xLTMuMWg0VjdIN2MtMi43NiAwLTUgMi4yNC01IDVzMi4yNCA1IDUgNWg0di0xLjlIN2MtMS43MSAwLTMuMS0xLjM5LTMuMS0zLjF6TTggMTNoOHYtMkg4djJ6TTE5IDdoLTR2MS45aDRjMS43MSAwIDMuMSAxLjM5IDMuMSAzLjFzLTEuMzkgMy4xLTMuMSAzLjFoLTR2Mmg0YzIuNzYgMCA1LTIuMjQgNS01cy0yLjI0LTUtNS01eiIvPjwvc3ZnPg==';
             faviconElement.classList.remove('loading');
             statusElement.textContent = '✗ Sin icono';
             statusElement.style.color = '#e74c3c';
@@ -308,12 +316,14 @@ function getCategoryName(category) {
 
 // Agregar nuevo proyecto
 function addProject() {
-    const name = document.getElementById('projectName').value;
-    const url = document.getElementById('projectUrl').value;
-    const icon = document.getElementById('projectIcon').value;
-    const github = document.getElementById('projectGithub').value;
-    const description = document.getElementById('projectDescription').value;
+    const name = document.getElementById('projectName').value.trim();
+    const url = document.getElementById('projectUrl').value.trim();
+    const icon = document.getElementById('projectIcon').value.trim();
+    const github = document.getElementById('projectGithub').value.trim();
+    const description = document.getElementById('projectDescription').value.trim();
     const category = document.getElementById('projectCategory').value;
+    
+    console.log("➕ Agregando proyecto:", { name, url, icon, github, description, category });
     
     if (!name || !url || !icon || !description) {
         alert('Por favor completa todos los campos obligatorios');
@@ -330,15 +340,19 @@ function addProject() {
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
     };
     
+    console.log("📤 Enviando a Firestore:", projectData);
+    
     db.collection('projects').add(projectData)
-        .then(() => {
+        .then((docRef) => {
+            console.log("✅ Proyecto agregado con ID:", docRef.id);
             alert('Proyecto agregado exitosamente');
             clearAdminForm();
             loadProjects();
         })
         .catch((error) => {
-            console.error("Error agregando proyecto: ", error);
-            alert('Error al agregar el proyecto');
+            console.error("❌ Error agregando proyecto: ", error);
+            console.error("Código:", error.code, "Mensaje:", error.message);
+            alert('Error al agregar el proyecto: ' + error.message);
         });
 }
 
@@ -460,3 +474,26 @@ function visitWebsite() {
         closeModal();
     }
 }
+
+// Función de prueba para debugging
+function testFirebase() {
+    console.log("🧪 Probando Firebase...");
+    console.log("Firebase apps:", firebase.apps.length);
+    console.log("Firestore db:", typeof db);
+    
+    if (db) {
+        db.collection('projects').get()
+            .then(snap => {
+                console.log("📊 Documentos en Firestore:", snap.size);
+                snap.forEach(doc => {
+                    console.log("📄 Documento:", doc.id, doc.data());
+                });
+            })
+            .catch(err => {
+                console.error("❌ Error leyendo Firestore:", err);
+            });
+    }
+}
+
+// Ejecutar prueba después de cargar
+setTimeout(testFirebase, 2000);
