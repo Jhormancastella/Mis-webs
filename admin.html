@@ -1,1 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Panel de Administración</title>
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <div class="container">
+    <h1>🔐 Panel de Administración</h1>
 
+    <div id="authSection">
+      <input type="password" id="password" placeholder="Contraseña: Rosy123" autocomplete="off" />
+      <button onclick="login()">Iniciar Sesión</button>
+    </div>
+
+    <div id="adminSection" style="display:none;">
+      <button onclick="logout()" class="logout-btn">Cerrar Sesión</button>
+
+      <form id="projectForm">
+        <input type="hidden" id="projectId">
+        <input type="text" id="title" placeholder="Título del proyecto" required>
+        <input type="url" id="url" placeholder="URL del sitio web" required>
+        <input type="url" id="logoUrl" placeholder="URL del logo (opcional)">
+        <input type="url" id="githubUrl" placeholder="URL del repositorio GitHub (opcional)">
+        <textarea id="description" placeholder="Descripción" required></textarea>
+        <select id="category" required>
+          <option value="tool">🔧 Herramientas</option>
+          <option value="map">🗺️ Mapas</option>
+          <option value="fun">🎮 Entretenimiento</option>
+        </select>
+        <button type="submit">Guardar Proyecto</button>
+      </form>
+
+      <h2>Proyectos Existentes</h2>
+      <div id="projectsList">Cargando...</div>
+    </div>
+  </div>
+
+  <script type="module" src="admin.js"></script>
+</body>
+</html>
