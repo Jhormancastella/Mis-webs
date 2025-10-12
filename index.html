@@ -9,153 +9,6 @@
     
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🌐</text></svg>">
     <link rel="stylesheet" href="style.css">
-    
-    <style>
-        /* Loader circular */
-        .projects-loader {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 400px;
-            padding: 2rem;
-        }
-        
-        .projects-loader.hidden {
-            display: none;
-        }
-        
-        .loader-box {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            width: 200px;
-            height: 200px;
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            background: #f9fafb;
-            gap: 1rem;
-        }
-        
-        /* Dark mode support */
-        body.dark-mode .loader-box {
-            background: #1f2937;
-            border-color: #374151;
-        }
-        
-        .spinner-svg {
-            width: 48px;
-            height: 48px;
-            animation: spin 1s linear infinite;
-            color: #e5e7eb;
-        }
-        
-        body.dark-mode .spinner-svg {
-            color: #4b5563;
-        }
-        
-        .spinner-svg .fill-path {
-            fill: #3b82f6;
-        }
-        
-        @keyframes spin {
-            from {
-                transform: rotate(0deg);
-            }
-            to {
-                transform: rotate(360deg);
-            }
-        }
-        
-        .loader-text {
-            color: #6b7280;
-            font-size: 14px;
-            margin-top: 8px;
-        }
-        
-        body.dark-mode .loader-text {
-            color: #9ca3af;
-        }
-        
-        /* Ocultar el grid mientras carga */
-        .website-grid.loading {
-            display: none;
-        }
-        
-        /* Mejoras al modal con 3 botones */
-        .modal-buttons {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 20px;
-        }
-        
-        .modal-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-close {
-            background: #6c757d;
-            color: white;
-        }
-        
-        .btn-close:hover {
-            background: #5a6268;
-            transform: translateY(-2px);
-        }
-        
-        .btn-github {
-            background: #24292e;
-            color: white;
-        }
-        
-        .btn-github:hover {
-            background: #1a1e22;
-            transform: translateY(-2px);
-        }
-        
-        .btn-visit {
-            background: #007bff;
-            color: white;
-        }
-        
-        .btn-visit:hover {
-            background: #0056b3;
-            transform: translateY(-2px);
-        }
-        
-        .modal-btn svg {
-            width: 18px;
-            height: 18px;
-            fill: currentColor;
-        }
-        
-        /* Animación suave de entrada para los proyectos */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .website-card {
-            animation: fadeIn 0.5s ease-out;
-        }
-    </style>
 </head>
 <body>
     <div class="header-container">
@@ -181,22 +34,8 @@
             <span id="projectCount">Cargando proyectos...</span>
         </div>
         
-        <!-- Loader circular mientras cargan los proyectos -->
-        <div class="projects-loader" id="projectsLoader">
-            <div class="loader-box">
-                <div role="status">
-                    <svg aria-hidden="true" class="spinner-svg" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
-                        <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill" class="fill-path"/>
-                    </svg>
-                    <span class="sr-only">Cargando...</span>
-                </div>
-                <p class="loader-text">Cargando proyectos...</p>
-            </div>
-        </div>
-        
-        <div class="website-grid loading" id="websiteGrid">
-            <!-- Los proyectos se cargarán dinámicamente desde Firebase -->
+        <div class="website-grid" id="websiteGrid">
+             Los proyectos se cargarán dinámicamente desde Firebase 
         </div>
 
         <div class="no-results" id="noResults">
@@ -259,77 +98,20 @@
         </svg>
     </div>
 
-    <!-- Modal mejorado con 3 botones -->
     <div class="modal" id="websiteModal" role="dialog" aria-modal="true">
         <div class="modal-content">
             <img class="modal-icon" id="modalIcon" alt="Icono del sitio web">
             <h2 class="modal-title" id="modalTitle">Título</h2>
             <p class="modal-description" id="modalDescription">Descripción del sitio web...</p>
-            
             <div class="modal-buttons">
-                <button type="button" class="modal-btn btn-close" onclick="closeModal()">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-                    </svg>
-                    Cerrar
-                </button>
-                
-                <button type="button" class="modal-btn btn-github" onclick="openRepository()" id="repoBtn">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                    </svg>
-                    Repositorio
-                </button>
-                
-                <button type="button" class="modal-btn btn-visit" onclick="visitWebsite()">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/>
-                    </svg>
-                    Visitar Sitio
-                </button>
+                <button type="button" class="modal-btn btn-close" onclick="closeModal()">Cerrar</button>
+                <button type="button" class="modal-btn btn-visit" onclick="visitWebsite()">Ir al Sitio</button>
             </div>
         </div>
     </div>
 
+    
     <script type="module" src="firebase-config.js"></script>
     <script type="module" src="main.js"></script>
-    
-    <script>
-        // Función para ocultar el loader y mostrar los proyectos
-        window.hideProjectsLoader = function() {
-            const loader = document.getElementById('projectsLoader');
-            const grid = document.getElementById('websiteGrid');
-            
-            if (loader) {
-                loader.classList.add('hidden');
-            }
-            if (grid) {
-                grid.classList.remove('loading');
-            }
-        }
-        
-        // Función para mostrar el loader y ocultar los proyectos
-        window.showProjectsLoader = function() {
-            const loader = document.getElementById('projectsLoader');
-            const grid = document.getElementById('websiteGrid');
-            
-            if (loader) {
-                loader.classList.remove('hidden');
-            }
-            if (grid) {
-                grid.classList.add('loading');
-            }
-        }
-        
-        // Función para abrir el repositorio
-        window.openRepository = function() {
-            const repoUrl = window.currentProjectRepo;
-            if (repoUrl) {
-                window.open(repoUrl, '_blank');
-            } else {
-                alert('No hay repositorio disponible para este proyecto');
-            }
-        }
-    </script>
 </body>
 </html>
