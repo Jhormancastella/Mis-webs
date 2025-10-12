@@ -1,1 +1,114 @@
 
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - Portfolio</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>⚙️</text></svg>">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+     Login Screen 
+    <div id="loginScreen" class="auth-container">
+        <div class="auth-card">
+            <h1>🔐 Panel de Administración</h1>
+            <p class="auth-subtitle">Ingresa tus credenciales para continuar</p>
+            
+            <form id="loginForm" class="auth-form">
+                <div class="form-group">
+                    <label for="email">Correo Electrónico</label>
+                    <input type="email" id="email" required placeholder="admin@example.com">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" required placeholder="Rosy123">
+                </div>
+                
+                <button type="submit" class="btn-primary">Iniciar Sesión</button>
+                <div id="loginError" class="error-message"></div>
+            </form>
+            
+            <a href="index.html" class="back-link">← Volver al Portfolio</a>
+        </div>
+    </div>
+
+     Admin Panel 
+    <div id="adminPanel" class="admin-panel" style="display: none;">
+        <header class="admin-header">
+            <h1>⚙️ Panel de Administración</h1>
+            <div class="admin-actions">
+                <button id="themeToggle" class="btn-icon" title="Cambiar tema">🌓</button>
+                <button id="logoutBtn" class="btn-secondary">Cerrar Sesión</button>
+            </div>
+        </header>
+
+        <div class="admin-content">
+             Add/Edit Project Form 
+            <section class="admin-section">
+                <h2 id="formTitle">➕ Agregar Nuevo Proyecto</h2>
+                
+                <form id="projectForm" class="project-form">
+                    <input type="hidden" id="projectId">
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="projectName">Nombre del Proyecto *</label>
+                            <input type="text" id="projectName" required placeholder="Ej: MarcaLibros Free">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="projectCategory">Categoría *</label>
+                            <select id="projectCategory" required>
+                                <option value="">Seleccionar...</option>
+                                <option value="tool">🔧 Herramientas</option>
+                                <option value="map">🗺️ Mapas</option>
+                                <option value="fun">🎮 Entretenimiento</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="projectUrl">URL del Proyecto *</label>
+                        <input type="url" id="projectUrl" required placeholder="https://ejemplo.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="projectIcon">URL del Logo/Icono *</label>
+                        <input type="url" id="projectIcon" required placeholder="https://ejemplo.com/logo.png">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="projectGithub">URL del Repositorio GitHub (opcional)</label>
+                        <input type="url" id="projectGithub" placeholder="https://github.com/usuario/repo">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="projectDescription">Descripción *</label>
+                        <textarea id="projectDescription" required rows="3" placeholder="Describe tu proyecto..."></textarea>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary" id="submitBtn">Agregar Proyecto</button>
+                        <button type="button" class="btn-secondary" id="cancelBtn" style="display: none;">Cancelar</button>
+                    </div>
+                </form>
+            </section>
+
+             Projects List 
+            <section class="admin-section">
+                <h2>📋 Proyectos Existentes (<span id="projectsCount">0</span>)</h2>
+                
+                <div class="projects-list" id="projectsList">
+                     Los proyectos se cargarán dinámicamente 
+                </div>
+            </section>
+        </div>
+    </div>
+
+     Firebase SDKs 
+    <script type="module" src="firebase-config.js"></script>
+    <script type="module" src="admin.js"></script>
+</body>
+</html>
