@@ -7,8 +7,112 @@
     <meta name="description" content="Portfolio de proyectos web de Jhorman Jesús Castellanos Morales">
     <meta name="author" content="Jhorman Jesús Castellanos Morales">
     
+    <!-- Meta tags para SEO y redes sociales -->
+    <meta property="og:title" content="Mis Webs - Portfolio de Jhorman Jesús Castellanos Morales">
+    <meta property="og:description" content="Portfolio de proyectos web personales. Desarrollador Web Full Stack.">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Mis Webs - Portfolio">
+    <meta name="twitter:description" content="Portfolio de proyectos web personales.">
+    
+    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🌐</text></svg>">
     <link rel="stylesheet" href="style.css">
+    
+    <style>
+        /* Estilos para el spinner de carga */
+        .loading-spinner {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 3rem 0;
+            width: 100%;
+        }
+        
+        .spinner-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 14rem;
+            padding: 2rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            background-color: #f9fafb;
+        }
+        
+        .dark .spinner-container {
+            background-color: #1f2937;
+            border-color: #374151;
+        }
+        
+        .spinner-icon {
+            width: 2rem;
+            height: 2rem;
+            color: #d1d5db;
+            animation: spin 1s linear infinite;
+        }
+        
+        .dark .spinner-icon {
+            color: #4b5563;
+        }
+        
+        .spinner-fill {
+            fill: #3b82f6;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Texto oculto para accesibilidad */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+        
+        /* Estados del grid durante carga */
+        .website-grid.loading {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        
+        /* Mejoras adicionales para un aspecto más profesional */
+        .header-container {
+            position: relative;
+        }
+        
+        .admin-link {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            transition: transform 0.2s ease;
+        }
+        
+        .admin-link:hover {
+            transform: rotate(45deg);
+        }
+        
+        .project-counter {
+            text-align: center;
+            margin: 1rem 0;
+            font-style: italic;
+            color: #6b7280;
+        }
+        
+        .dark .project-counter {
+            color: #9ca3af;
+        }
+    </style>
 </head>
 <body>
     <div class="header-container">
@@ -34,8 +138,22 @@
             <span id="projectCount">Cargando proyectos...</span>
         </div>
         
+        <!-- Spinner de carga -->
+        <div id="loadingSpinner" class="loading-spinner">
+            <div class="spinner-container">
+                <div role="status">
+                    <svg aria-hidden="true" class="spinner-icon" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                        <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" class="spinner-fill"/>
+                    </svg>
+                    <span class="sr-only">Cargando proyectos...</span>
+                </div>
+                <p style="margin-top: 1rem; color: #6b7280;">Cargando proyectos...</p>
+            </div>
+        </div>
+        
         <div class="website-grid" id="websiteGrid">
-             Los proyectos se cargarán dinámicamente desde Firebase 
+            <!-- Los proyectos se cargarán dinámicamente desde Firebase -->
         </div>
 
         <div class="no-results" id="noResults">
@@ -110,8 +228,55 @@
         </div>
     </div>
 
-    
     <script type="module" src="firebase-config.js"></script>
     <script type="module" src="main.js"></script>
+    
+    <script>
+        // Control del spinner de carga
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const websiteGrid = document.getElementById('websiteGrid');
+        
+        // Función para mostrar/ocultar el spinner
+        function showLoading(show) {
+            if (show) {
+                loadingSpinner.style.display = 'flex';
+                websiteGrid.classList.add('loading');
+            } else {
+                loadingSpinner.style.display = 'none';
+                websiteGrid.classList.remove('loading');
+            }
+        }
+        
+        // Ejemplo de uso: mostrar spinner al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mostrar el spinner inicialmente
+            showLoading(true);
+            
+            // Simular carga de proyectos (esto se reemplazará con tu código Firebase)
+            setTimeout(() => {
+                // Aquí iría tu código para cargar proyectos desde Firebase
+                // Por ahora simulamos una carga de 2 segundos
+                showLoading(false);
+                document.getElementById('projectCount').textContent = '0 proyectos encontrados';
+            }, 2000);
+            
+            // Establecer año actual en el footer
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+        });
+        
+        // Control del spinner durante búsquedas
+        const searchBar = document.getElementById('searchBar');
+        if (searchBar) {
+            searchBar.addEventListener('input', function() {
+                showLoading(true);
+                
+                // Simula un pequeño delay para evitar parpadeos en búsquedas rápidas
+                setTimeout(() => {
+                    // Aquí iría tu función de filtrado
+                    showLoading(false);
+                }, 300);
+            });
+        }
+    </script>
 </body>
 </html>
