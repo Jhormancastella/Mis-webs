@@ -1,16 +1,21 @@
-// Configuración de Firebase
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"
+import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"
+import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"
+
+// Your web app's Firebase configuration
 const firebaseConfig = {
-    apiKey: "AIzaSy...",
-    authDomain: "portfolio-jhorman.firebaseapp.com",
-    projectId: "portfolio-jhorman",
-    storageBucket: "portfolio-jhorman.appspot.com",
-    messagingSenderId: "1234567890",
-    appId: "1:1234567890:web:abcdef123456789"
-};
+  apiKey: "AIzaSyBIjWVGYWnu7VH6sliEtFToJPwP8dxV74w",
+  authDomain: "portfolio-web-af46f.firebaseapp.com",
+  projectId: "portfolio-web-af46f",
+  storageBucket: "portfolio-web-af46f.firebasestorage.app",
+  messagingSenderId: "362528992591",
+  appId: "1:362528992591:web:12ec29460f59fe1974693a",
+}
 
-// Inicializar Firebase
-firebase.initializeApp(firebaseConfig);
+// Initialize Firebase
+const app = initializeApp(firebaseConfig)
+const db = getFirestore(app)
+const auth = getAuth(app)
 
-// Inicializar servicios
-const db = firebase.firestore();
-const auth = firebase.auth();
+export { app, db, auth }
