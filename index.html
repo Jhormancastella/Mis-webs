@@ -11,72 +11,78 @@
     <link rel="stylesheet" href="style.css">
     
     <style>
-        /* Loader de carga */
-        .loading-container {
-            display: none;
-            justify-content: center;
-            align-items: center;
-            min-height: 300px;
-            flex-direction: column;
-            gap: 20px;
-        }
-        
-        .loading-container.active {
+        /* Loader circular */
+        .projects-loader {
             display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
+            padding: 2rem;
         }
         
-        .loader {
-            width: 50px;
-            height: 50px;
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #3498db;
-            border-radius: 50%;
+        .projects-loader.hidden {
+            display: none;
+        }
+        
+        .loader-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 200px;
+            height: 200px;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            background: #f9fafb;
+            gap: 1rem;
+        }
+        
+        /* Dark mode support */
+        body.dark-mode .loader-box {
+            background: #1f2937;
+            border-color: #374151;
+        }
+        
+        .spinner-svg {
+            width: 48px;
+            height: 48px;
             animation: spin 1s linear infinite;
+            color: #e5e7eb;
+        }
+        
+        body.dark-mode .spinner-svg {
+            color: #4b5563;
+        }
+        
+        .spinner-svg .fill-path {
+            fill: #3b82f6;
         }
         
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
         }
         
-        .loading-text {
-            color: #666;
-            font-size: 16px;
-            animation: pulse 1.5s ease-in-out infinite;
+        .loader-text {
+            color: #6b7280;
+            font-size: 14px;
+            margin-top: 8px;
         }
         
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+        body.dark-mode .loader-text {
+            color: #9ca3af;
         }
         
-        /* Skeleton cards mientras carga */
-        .skeleton-cards {
+        /* Ocultar el grid mientras carga */
+        .website-grid.loading {
             display: none;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-            padding: 20px 0;
         }
         
-        .skeleton-cards.active {
-            display: grid;
-        }
-        
-        .skeleton-card {
-            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-            background-size: 200% 100%;
-            animation: loading 1.5s infinite;
-            border-radius: 12px;
-            height: 200px;
-            padding: 20px;
-        }
-        
-        @keyframes loading {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
-        
-        /* Mejoras al modal */
+        /* Mejoras al modal con 3 botones */
         .modal-buttons {
             display: flex;
             gap: 10px;
@@ -134,16 +140,11 @@
             fill: currentColor;
         }
         
-        /* Animación de entrada para los proyectos */
-        .website-card {
-            animation: fadeInUp 0.5s ease forwards;
-            opacity: 0;
-        }
-        
-        @keyframes fadeInUp {
+        /* Animación suave de entrada para los proyectos */
+        @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(10px);
             }
             to {
                 opacity: 1;
@@ -151,12 +152,9 @@
             }
         }
         
-        .website-card:nth-child(1) { animation-delay: 0.1s; }
-        .website-card:nth-child(2) { animation-delay: 0.2s; }
-        .website-card:nth-child(3) { animation-delay: 0.3s; }
-        .website-card:nth-child(4) { animation-delay: 0.4s; }
-        .website-card:nth-child(5) { animation-delay: 0.5s; }
-        .website-card:nth-child(6) { animation-delay: 0.6s; }
+        .website-card {
+            animation: fadeIn 0.5s ease-out;
+        }
     </style>
 </head>
 <body>
@@ -183,21 +181,21 @@
             <span id="projectCount">Cargando proyectos...</span>
         </div>
         
-        <!-- Loader de carga -->
-        <div class="loading-container active" id="loadingContainer">
-            <div class="loader"></div>
-            <p class="loading-text">Cargando proyectos increíbles...</p>
+        <!-- Loader circular mientras cargan los proyectos -->
+        <div class="projects-loader" id="projectsLoader">
+            <div class="loader-box">
+                <div role="status">
+                    <svg aria-hidden="true" class="spinner-svg" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                        <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill" class="fill-path"/>
+                    </svg>
+                    <span class="sr-only">Cargando...</span>
+                </div>
+                <p class="loader-text">Cargando proyectos...</p>
+            </div>
         </div>
         
-        <!-- Skeleton cards para mejor UX -->
-        <div class="skeleton-cards" id="skeletonCards">
-            <div class="skeleton-card"></div>
-            <div class="skeleton-card"></div>
-            <div class="skeleton-card"></div>
-            <div class="skeleton-card"></div>
-        </div>
-        
-        <div class="website-grid" id="websiteGrid">
+        <div class="website-grid loading" id="websiteGrid">
             <!-- Los proyectos se cargarán dinámicamente desde Firebase -->
         </div>
 
@@ -297,16 +295,30 @@
     <script type="module" src="main.js"></script>
     
     <script>
-        // Función para ocultar el loader cuando los proyectos se carguen
-        window.hideLoader = function() {
-            document.getElementById('loadingContainer').classList.remove('active');
-            document.getElementById('skeletonCards').classList.remove('active');
+        // Función para ocultar el loader y mostrar los proyectos
+        window.hideProjectsLoader = function() {
+            const loader = document.getElementById('projectsLoader');
+            const grid = document.getElementById('websiteGrid');
+            
+            if (loader) {
+                loader.classList.add('hidden');
+            }
+            if (grid) {
+                grid.classList.remove('loading');
+            }
         }
         
-        // Función para mostrar el loader
-        window.showLoader = function() {
-            document.getElementById('loadingContainer').classList.add('active');
-            document.getElementById('skeletonCards').classList.add('active');
+        // Función para mostrar el loader y ocultar los proyectos
+        window.showProjectsLoader = function() {
+            const loader = document.getElementById('projectsLoader');
+            const grid = document.getElementById('websiteGrid');
+            
+            if (loader) {
+                loader.classList.remove('hidden');
+            }
+            if (grid) {
+                grid.classList.add('loading');
+            }
         }
         
         // Función para abrir el repositorio
