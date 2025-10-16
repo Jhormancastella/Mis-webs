@@ -62,89 +62,6 @@
     .dark-mode .project-counter {
       color: #e5e7eb;
     }
-
-    /* === ESTILOS CORREGIDOS PARA EL MODAL === */
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 1000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.6);
-      overflow: auto;
-      padding: 20px;
-      box-sizing: border-box;
-    }
-
-    .modal-content {
-      background-color: #fff;
-      margin: auto;
-      padding: 2rem;
-      border-radius: 12px;
-      max-width: 500px;
-      width: 90%;
-      position: relative;
-      top: 50%;
-      transform: translateY(-50%);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-    }
-
-    .dark-mode .modal-content {
-      background-color: #1f2937;
-      color: #f9fafb;
-    }
-
-    .modal-icon {
-      width: 64px;
-      height: 64px;
-      display: block;
-      margin: 0 auto 1rem;
-    }
-
-    .modal-title {
-      text-align: center;
-      margin-bottom: 1rem;
-    }
-
-    .modal-description {
-      text-align: center;
-      margin-bottom: 1.5rem;
-    }
-
-    .modal-buttons {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-    }
-
-    .modal-btn {
-      padding: 0.5rem 1.25rem;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 600;
-    }
-
-    .btn-close {
-      background-color: #e5e7eb;
-      color: #1f2937;
-    }
-
-    .dark-mode .btn-close {
-      background-color: #374151;
-      color: #f9fafb;
-    }
-
-    .btn-visit {
-      background-color: #3b82f6;
-      color: white;
-    }
-
-    .btn-visit:hover {
-      background-color: #2563eb;
-    }
   </style>
 </head>
 <body>
@@ -180,8 +97,6 @@
       <p>Intenta con otros términos de búsqueda</p>
     </div>
   </div>
-
-  <!-- Contador de visitas RESTAURADO -->
   <div class="visit-counter-container">
     <div id="sfcuascp95sxjzn8axqnrw65ahq89hb12pw"></div>
     <script type="text/javascript" src="https://counter1.optistats.ovh/private/counter.js?c=uascp95sxjzn8axqnrw65ahq89hb12pw&down=async" async></script>
@@ -191,7 +106,6 @@
       </a>
     </noscript>
   </div>
-
   <footer class="footer">
     <div class="footer-content">
       <div class="footer-name">👨‍💻 Jhorman Jesús Castellanos Morales</div>
@@ -236,62 +150,6 @@
       </div>
     </div>
   </div>
-
-  <!-- === SCRIPTS === -->
-  <script>
-    // Funciones del modal (asegúrate de que existan)
-    function openModal(title, description, iconUrl, url) {
-      document.getElementById('modalTitle').textContent = title;
-      document.getElementById('modalDescription').textContent = description;
-      document.getElementById('modalIcon').src = iconUrl || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><text y="0.9em" font-size="20">🌐</text></svg>';
-      window.currentModalUrl = url;
-      document.getElementById('websiteModal').style.display = 'block';
-      document.body.style.overflow = 'hidden'; // Evita scroll en fondo
-    }
-
-    function closeModal() {
-      document.getElementById('websiteModal').style.display = 'none';
-      document.body.style.overflow = ''; // Restaura scroll
-    }
-
-    function visitWebsite() {
-      if (window.currentModalUrl) {
-        window.open(window.currentModalUrl, '_blank');
-        closeModal();
-      }
-    }
-
-    // Cerrar modal al hacer clic fuera del contenido
-    document.getElementById('websiteModal').addEventListener('click', function(e) {
-      if (e.target === this) closeModal();
-    });
-
-    // Verificación de posición del modal (opcional, para depuración)
-    function debugModalPosition() {
-      const modal = document.getElementById('websiteModal');
-      if (modal.style.display === 'block') {
-        const rect = modal.querySelector('.modal-content').getBoundingClientRect();
-        console.log('Modal position:', {
-          top: rect.top,
-          left: rect.left,
-          width: rect.width,
-          height: rect.height,
-          viewportHeight: window.innerHeight,
-          scrollY: window.scrollY
-        });
-      }
-    }
-
-    // Puedes llamar a debugModalPosition() después de abrir un modal si necesitas inspeccionar
-    // Ejemplo: reemplazar openModal temporalmente para pruebas:
-    /*
-    function openModalDebug(...) {
-      openModal(...);
-      setTimeout(debugModalPosition, 100);
-    }
-    */
-  </script>
-
   <script type="module" src="firebase-config.js"></script>
   <script type="module" src="main.js"></script>
 </body>
