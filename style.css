@@ -899,6 +899,10 @@ body.dark .project-item-description {
 
 /* === RESPONSIVE MEJORADO PARA 360–480px === */
 @media (max-width: 768px) {
+  body {
+    padding: 16px 12px;
+  }
+  
   .website-grid {
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
     gap: 16px;
@@ -971,31 +975,346 @@ body.dark .project-item-description {
   }
 }
 
-/* === OPTIMIZACIÓN EXTRA PARA MÓVILES DE GAMA BAJA (OPCIONAL) === */
+/* === CORRECCIONES ESPECÍFICAS PARA 360-480px === */
 @media (max-width: 480px) {
-  /* Mejor legibilidad */
-  h1 { font-size: 1.8rem; }
-  .subtitle,
-  .website-name,
-  .project-item-name { font-size: 1rem; }
-  .website-description,
-  .project-item-description { font-size: 0.875rem; }
+  body {
+    padding: 12px 8px;
+  }
+  
+  .header-container {
+    margin: 15px 0 20px;
+    padding: 0 8px;
+  }
+  
+  h1 {
+    font-size: 1.6rem;
+    padding-right: 40px;
+    display: block;
+    margin-bottom: 8px;
+  }
+  
+  .admin-link {
+    position: absolute;
+    right: 44px;
+    top: 8px;
+    transform: none;
+    font-size: 1.3rem;
+    min-width: 36px;
+    min-height: 36px;
+  }
+  
+  .theme-toggle {
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    transform: none;
+    font-size: 1.1rem;
+    min-width: 36px;
+    min-height: 36px;
+  }
+  
+  .admin-link:hover,
+  .theme-toggle:hover {
+    transform: none;
+  }
+  
+  .subtitle {
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+    padding: 0 10px;
+  }
+  
+  .controls-container {
+    padding: 0 8px;
+    margin-bottom: 20px;
+    gap: 10px;
+  }
+  
+  .search-bar {
+    min-width: 100%;
+    max-width: 100%;
+    font-size: 14px;
+    padding: 10px 12px;
+    min-height: 42px;
+  }
+  
+  .filter-buttons {
+    width: 100%;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  
+  .filter-btn {
+    flex: 1;
+    padding: 8px 4px;
+    font-size: 12px;
+    min-height: 38px;
+    min-width: auto;
+  }
+  
+  .project-counter {
+    font-size: 12px;
+    margin-bottom: 15px;
+    padding: 0 8px;
+  }
+  
+  .website-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 12px;
+    padding: 12px 8px;
+  }
+  
+  .website-card {
+    padding: 16px 8px;
+    border-radius: 12px;
+  }
+  
+  .favicon {
+    width: 44px;
+    height: 44px;
+    margin-bottom: 12px;
+  }
+  
+  .website-name {
+    font-size: 13px;
+    line-height: 1.2;
+  }
+  
+  .website-description {
+    font-size: 11px;
+  }
+  
+  .status {
+    font-size: 9px;
+  }
+  
+  .modal-content {
+    margin: 10px;
+    padding: 20px 15px;
+    border-radius: 16px;
+  }
+  
+  .modal-icon {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 15px;
+  }
+  
+  .modal-title {
+    font-size: 1.3rem;
+    margin-bottom: 12px;
+  }
+  
+  .modal-description {
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+  
+  .modal-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .modal-btn {
+    padding: 12px 20px;
+    font-size: 14px;
+    min-height: 44px;
+    width: 100%;
+  }
+  
+  .footer {
+    margin-top: 30px;
+    padding: 25px 12px 20px;
+    border-radius: 16px 16px 0 0;
+  }
+  
+  .footer-name {
+    font-size: 1.1rem;
+  }
+  
+  .footer-social {
+    gap: 12px;
+    margin: 15px 0;
+  }
+  
+  .social-link {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+    min-height: 38px;
+  }
+  
+  .social-link svg {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .footer-info {
+    font-size: 13px;
+  }
+  
+  .footer-year {
+    font-size: 12px;
+    margin-top: 12px;
+    padding-top: 12px;
+  }
+  
+  .scroll-top {
+    bottom: 15px;
+    right: 15px;
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+    min-height: 42px;
+  }
+  
+  .visit-counter-container {
+    font-size: 0.8rem;
+    margin: 20px 0;
+  }
+  
+  /* Admin responsive */
+  .admin-header {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+  }
+  
+  .admin-actions {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .admin-section {
+    padding: 20px 15px;
+    margin-bottom: 20px;
+  }
+  
+  .admin-section h2 {
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .form-actions .btn-primary {
+    width: 100%;
+  }
+  
+  .project-item {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+    padding: 15px;
+  }
+  
+  .project-item-icon {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .project-item-name {
+    font-size: 16px;
+  }
+  
+  .project-item-description {
+    font-size: 13px;
+  }
+  
+  .project-item-actions {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .btn-edit,
+  .btn-delete {
+    flex: 1;
+    max-width: 120px;
+  }
 
   /* Evitar efectos costosos */
   body:not(.dark) .website-card::before {
     display: none;
   }
+}
 
-  /* Ajustar header */
-  .header-container { margin: 20px 0; }
-  h1 { padding-right: 48px; }
-  .admin-link { right: 52px; }
-  .theme-toggle { right: 8px; }
+/* === CORRECCIONES EXTREMAS PARA 360px Y MENORES === */
+@media (max-width: 360px) {
+  body {
+    padding: 10px 6px;
+  }
+  
+  .website-grid {
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 10px;
+    padding: 10px 6px;
+  }
+  
+  .website-card {
+    padding: 14px 6px;
+  }
+  
+  .favicon {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .website-name {
+    font-size: 12px;
+  }
+  
+  h1 {
+    font-size: 1.4rem;
+    padding-right: 36px;
+  }
+  
+  .admin-link {
+    right: 40px;
+    top: 6px;
+  }
+  
+  .theme-toggle {
+    right: 6px;
+    top: 6px;
+  }
+  
+  .filter-btn {
+    font-size: 11px;
+    padding: 6px 2px;
+  }
+}
 
-  /* Footer */
-  .social-link {
-    width: 42px;
-    height: 42px;
+/* === MEJORA DE RENDIMIENTO PARA MÓVILES === */
+@media (max-width: 480px) and (prefers-reduced-motion: no-preference) {
+  .website-card {
+    animation-duration: 0.4s;
+  }
+  
+  .website-card:hover {
+    transform: translateY(-4px);
+  }
+}
+
+/* === GARANTIZAR QUE NO HAY DESBORDAMIENTO HORIZONTAL === */
+@media (max-width: 480px) {
+  html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+  
+  .main-content {
+    max-width: 100%;
+    overflow-x: hidden;
   }
 }
 
@@ -1003,5 +1322,15 @@ body.dark .project-item-description {
 @media (hover: none) {
   .website-card:active {
     transform: scale(0.98);
+  }
+  
+  .website-card:hover {
+    transform: none;
+  }
+  
+  .website-card:hover .website-description {
+    opacity: 0;
+    max-height: 0;
+    margin-top: 0;
   }
 }
