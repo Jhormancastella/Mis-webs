@@ -1,4 +1,3 @@
-
 import { auth, db } from "./firebase-config.js"
 import {
   signInWithEmailAndPassword,
@@ -9,6 +8,7 @@ import {
   collection,
   addDoc,
   getDocs,
+  getDoc,
   doc,
   updateDoc,
   deleteDoc,
@@ -20,6 +20,9 @@ import {
 let currentEditingId = null
 let isDarkMode = false
 
+const FALLBACK_ICON =
+  "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzk5OSI+PHBhdGggZD0iTTMuOSAxMmMwLTEuNzEgMS4zOS0zLjEgMy4xLTMuMWg0VjdIN2MtMi43NiAwLTUgMi4yNC01IDVzMi4yNCA1IDUgNWg0di0xLjlIN2MtMS43MSAwLTMuMS0xLjM5LTMuMS0zLjF6TTggMTNoOHYtMkg4djJ6TTE5IDdoLTR2MS45aDRjMS43MSAwIDMuMSAxLjM5IDMuMSAzLjFzLTEuMzkgMy4xLTMuMSAzLjFoLTR2Mkg4YzIuNzYgMCA1LTIuMjQgNS01cy0yLjI0LTUtNS01eiIvPjwvc3ZnPg=="
+
 document.addEventListener("DOMContentLoaded", () => {
   setupThemeToggle()
   setupAuthListener()
@@ -27,6 +30,22 @@ document.addEventListener("DOMContentLoaded", () => {
   setupProjectForm()
   setupLogout()
 })
+
+function safeText(value) {
+  return typeof value === "string" ? value.trim() : ""
+}
+
+function isValidHttpUrl(value, allowEmpty = false) {
+  const text = safeText(value)
+  if (allowEmpty && text === "") return true
+
+  try {
+    const parsed = new URL(text)
+    return parsed.protocol === "https:" || parsed.protocol === "http:"
+  } catch {
+    return false
+  }
+}
 
 function setupThemeToggle() {
   const saved = localStorage.getItem("darkMode") === "true"
@@ -40,7 +59,7 @@ function setupThemeToggle() {
     toggle.addEventListener("click", () => {
       isDarkMode = !isDarkMode
       document.body.classList.toggle("dark", isDarkMode)
-      localStorage.setItem("darkMode", isDarkMode)
+      localStorage.setItem("darkMode", String(isDarkMode))
     })
   }
 }
@@ -68,10 +87,12 @@ function showAdminPanel() {
 
 function setupLoginForm() {
   const loginForm = document.getElementById("loginForm")
+  if (!loginForm) return
+
   loginForm.addEventListener("submit", async (e) => {
     e.preventDefault()
 
-    const email = document.getElementById("email").value
+    const email = safeText(document.getElementById("email").value)
     const password = document.getElementById("password").value
     const errorDiv = document.getElementById("loginError")
 
@@ -87,6 +108,8 @@ function setupLoginForm() {
 
 function setupLogout() {
   const logoutBtn = document.getElementById("logoutBtn")
+  if (!logoutBtn) return
+
   logoutBtn.addEventListener("click", async () => {
     try {
       await signOut(auth)
@@ -99,35 +122,47 @@ function setupLogout() {
 function setupProjectForm() {
   const form = document.getElementById("projectForm")
   const cancelBtn = document.getElementById("cancelBtn")
+  if (!form || !cancelBtn) return
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault()
 
     const projectData = {
-      name: document.getElementById("projectName").value,
-      category: document.getElementById("projectCategory").value,
-      url: document.getElementById("projectUrl").value,
-      icon: document.getElementById("projectIcon").value,
-      github: document.getElementById("projectGithub").value || "",
-      description: document.getElementById("projectDescription").value,
+      name: safeText(document.getElementById("projectName").value),
+      category: safeText(document.getElementById("projectCategory").value),
+      url: safeText(document.getElementById("projectUrl").value),
+      icon: safeText(document.getElementById("projectIcon").value),
+      github: safeText(document.getElementById("projectGithub").value),
+      description: safeText(document.getElementById("projectDescription").value),
       updatedAt: serverTimestamp(),
+    }
+
+    if (!isValidHttpUrl(projectData.url)) {
+      alert("La URL del proyecto no es válida.")
+      return
+    }
+    if (!isValidHttpUrl(projectData.icon)) {
+      alert("La URL del icono no es válida.")
+      return
+    }
+    if (!isValidHttpUrl(projectData.github, true)) {
+      alert("La URL de GitHub no es válida.")
+      return
     }
 
     try {
       if (currentEditingId) {
-        // Update existing project
         const projectRef = doc(db, "projects", currentEditingId)
         await updateDoc(projectRef, projectData)
         alert("✅ Proyecto actualizado exitosamente")
       } else {
-        // Add new project
         projectData.createdAt = serverTimestamp()
         await addDoc(collection(db, "projects"), projectData)
         alert("✅ Proyecto agregado exitosamente")
       }
 
       resetForm()
-      loadProjects()
+      await loadProjects()
     } catch (error) {
       console.error("Error al guardar proyecto:", error)
       alert("❌ Error al guardar el proyecto. Intenta de nuevo.")
@@ -157,17 +192,20 @@ async function loadProjects() {
 
     let count = 0
     querySnapshot.forEach((docSnap) => {
-      count++
+      count += 1
       const project = { id: docSnap.id, ...docSnap.data() }
-      const projectItem = createProjectItem(project)
-      projectsList.appendChild(projectItem)
+      projectsList.appendChild(createProjectItem(project))
     })
 
     document.getElementById("projectsCount").textContent = count
 
     if (count === 0) {
-      projectsList.innerHTML =
-        '<p style="text-align: center; padding: 40px; color: #666;">No hay proyectos. Agrega tu primer proyecto arriba.</p>'
+      const emptyMessage = document.createElement("p")
+      emptyMessage.style.textAlign = "center"
+      emptyMessage.style.padding = "40px"
+      emptyMessage.style.color = "#666"
+      emptyMessage.textContent = "No hay proyectos. Agrega tu primer proyecto arriba."
+      projectsList.appendChild(emptyMessage)
     }
   } catch (error) {
     console.error("Error al cargar proyectos:", error)
@@ -184,64 +222,96 @@ function createProjectItem(project) {
     fun: "🎮 Entretenimiento",
   }
 
-  item.innerHTML = `
-        <img src="${project.icon}" alt="${project.name}" class="project-item-icon" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzk5OSI+PHBhdGggZD0iTTMuOSAxMmMwLTEuNzEgMS4zOS0zLjEgMy4xLTMuMWg0VjdIN2MtMi43NiAwLTUgMi4yNC01IDVzMi4yNCA1IDUgNWg0di0xLjlIN2MtMS43MSAwLTMuMS0xLjM5LTMuMS0zLjF6TTggMTNoOHYtMkg4djJ6TTE5IDdoLTR2MS45aDRjMS43MSAwIDMuMSAxLjM5IDMuMSAzLjFzLTEuMzkgMy4xLTMuMSAzLjFoLTR2Mmg0YzIuNzYgMCA1LTIuMjQgNS01cy0yLjI0LTUtNS01eiIvPjwvc3ZnPg=='">
-        <div class="project-item-info">
-            <div class="project-item-name">${project.name}</div>
-            <span class="project-item-category">${categoryEmojis[project.category] || project.category}</span>
-            <div class="project-item-description">${project.description}</div>
-        </div>
-        <div class="project-item-actions">
-            <button class="btn-edit" onclick="editProject('${project.id}')">✏️ Editar</button>
-            <button class="btn-delete" onclick="deleteProject('${project.id}', '${project.name}')">🗑️ Eliminar</button>
-        </div>
-    `
+  const icon = document.createElement("img")
+  icon.className = "project-item-icon"
+  icon.src = safeText(project.icon) || FALLBACK_ICON
+  icon.alt = safeText(project.name) || "Proyecto"
+  icon.addEventListener("error", () => {
+    icon.src = FALLBACK_ICON
+  })
+
+  const info = document.createElement("div")
+  info.className = "project-item-info"
+
+  const name = document.createElement("div")
+  name.className = "project-item-name"
+  name.textContent = safeText(project.name) || "Sin nombre"
+
+  const category = document.createElement("span")
+  category.className = "project-item-category"
+  category.textContent = categoryEmojis[project.category] || safeText(project.category) || "Sin categoría"
+
+  const description = document.createElement("div")
+  description.className = "project-item-description"
+  description.textContent = safeText(project.description) || "Sin descripción."
+
+  info.appendChild(name)
+  info.appendChild(category)
+  info.appendChild(description)
+
+  const actions = document.createElement("div")
+  actions.className = "project-item-actions"
+
+  const editBtn = document.createElement("button")
+  editBtn.className = "btn-edit"
+  editBtn.type = "button"
+  editBtn.textContent = "✏️ Editar"
+  editBtn.addEventListener("click", () => {
+    editProject(project.id)
+  })
+
+  const deleteBtn = document.createElement("button")
+  deleteBtn.className = "btn-delete"
+  deleteBtn.type = "button"
+  deleteBtn.textContent = "🗑️ Eliminar"
+  deleteBtn.addEventListener("click", () => {
+    deleteProject(project.id, safeText(project.name))
+  })
+
+  actions.appendChild(editBtn)
+  actions.appendChild(deleteBtn)
+
+  item.appendChild(icon)
+  item.appendChild(info)
+  item.appendChild(actions)
 
   return item
 }
 
-window.editProject = async (projectId) => {
+async function editProject(projectId) {
   try {
-    const projectsRef = collection(db, "projects")
-    const querySnapshot = await getDocs(projectsRef)
+    const projectRef = doc(db, "projects", projectId)
+    const projectSnap = await getDoc(projectRef)
+    if (!projectSnap.exists()) return
 
-    let projectData = null
-    querySnapshot.forEach((docSnap) => {
-      if (docSnap.id === projectId) {
-        projectData = docSnap.data()
-      }
-    })
+    const projectData = projectSnap.data()
+    currentEditingId = projectId
+    document.getElementById("projectName").value = safeText(projectData.name)
+    document.getElementById("projectCategory").value = safeText(projectData.category)
+    document.getElementById("projectUrl").value = safeText(projectData.url)
+    document.getElementById("projectIcon").value = safeText(projectData.icon)
+    document.getElementById("projectGithub").value = safeText(projectData.github)
+    document.getElementById("projectDescription").value = safeText(projectData.description)
 
-    if (projectData) {
-      currentEditingId = projectId
-      document.getElementById("projectName").value = projectData.name
-      document.getElementById("projectCategory").value = projectData.category
-      document.getElementById("projectUrl").value = projectData.url
-      document.getElementById("projectIcon").value = projectData.icon
-      document.getElementById("projectGithub").value = projectData.github || ""
-      document.getElementById("projectDescription").value = projectData.description
+    document.getElementById("formTitle").textContent = "✏️ Editar Proyecto"
+    document.getElementById("submitBtn").textContent = "Actualizar Proyecto"
+    document.getElementById("cancelBtn").style.display = "inline-block"
 
-      document.getElementById("formTitle").textContent = "✏️ Editar Proyecto"
-      document.getElementById("submitBtn").textContent = "Actualizar Proyecto"
-      document.getElementById("cancelBtn").style.display = "inline-block"
-
-      // Scroll to form
-      document.getElementById("projectForm").scrollIntoView({ behavior: "smooth" })
-    }
+    document.getElementById("projectForm").scrollIntoView({ behavior: "smooth" })
   } catch (error) {
     console.error("Error al cargar proyecto:", error)
   }
 }
 
-window.deleteProject = async (projectId, projectName) => {
-  if (confirm(`¿Estás seguro de que deseas eliminar "${projectName}"?`)) {
-    try {
-      await deleteDoc(doc(db, "projects", projectId))
-      alert("✅ Proyecto eliminado exitosamente")
-      loadProjects()
-    } catch (error) {
-      console.error("Error al eliminar proyecto:", error)
-      alert("❌ Error al eliminar el proyecto. Intenta de nuevo.")
-    }
+async function deleteProject(projectId, projectName) {
+  if (!confirm(`¿Estás seguro de que deseas eliminar "${projectName}"?`)) return
+
+  try {
+    await deleteDoc(doc(db, "projects", projectId))
+    alert("✅ Proyecto eliminado exitosamente")
+    await loadProjects()
+  } catch (error) {
+    console.error("Error al eliminar proyecto:", error)
+    alert("❌ Error al eliminar el proyecto. Intenta de nuevo.")
   }
 }

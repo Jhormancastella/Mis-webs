@@ -1,63 +1,64 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Administración - Portfolio</title>
+    <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
+    <meta name="googlebot" content="noindex,nofollow,noarchive,nosnippet">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>⚙️</text></svg>">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-     Login Screen 
+    <!-- Login Screen -->
     <div id="loginScreen" class="auth-container">
         <div class="auth-card">
             <h1>🔐 Panel de Administración</h1>
             <p class="auth-subtitle">Ingresa tus credenciales para continuar</p>
-            
+
             <form id="loginForm" class="auth-form">
                 <div class="form-group">
                     <label for="email">Correo Electrónico</label>
-                    <input type="email" id="email" required placeholder="admin@example.com">
+                    <input type="email" id="email" required placeholder="admin@example.com" autocomplete="email">
                 </div>
-                
+
                 <div class="form-group">
                     <label for="password">Contraseña</label>
-                    <input type="password" id="password" required placeholder="Rosy123">
+                    <input type="password" id="password" required placeholder="••••••••" autocomplete="current-password">
                 </div>
-                
+
                 <button type="submit" class="btn-primary">Iniciar Sesión</button>
-                <div id="loginError" class="error-message"></div>
+                <div id="loginError" class="error-message" aria-live="polite"></div>
             </form>
-            
+
             <a href="index.html" class="back-link">← Volver al Portfolio</a>
         </div>
     </div>
 
-     Admin Panel 
+    <!-- Admin Panel -->
     <div id="adminPanel" class="admin-panel" style="display: none;">
         <header class="admin-header">
             <h1>⚙️ Panel de Administración</h1>
             <div class="admin-actions">
-                <button id="themeToggle" class="btn-icon" title="Cambiar tema">🌓</button>
-                <button id="logoutBtn" class="btn-secondary">Cerrar Sesión</button>
+                <button id="themeToggle" class="btn-icon" title="Cambiar tema" type="button">🌓</button>
+                <button id="logoutBtn" class="btn-secondary" type="button">Cerrar Sesión</button>
             </div>
         </header>
 
         <div class="admin-content">
-             Add/Edit Project Form 
+            <!-- Add/Edit Project Form -->
             <section class="admin-section">
                 <h2 id="formTitle">➕ Agregar Nuevo Proyecto</h2>
-                
+
                 <form id="projectForm" class="project-form">
                     <input type="hidden" id="projectId">
-                    
+
                     <div class="form-row">
                         <div class="form-group">
                             <label for="projectName">Nombre del Proyecto *</label>
                             <input type="text" id="projectName" required placeholder="Ej: MarcaLibros Free">
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="projectCategory">Categoría *</label>
                             <select id="projectCategory" required>
@@ -96,19 +97,18 @@
                 </form>
             </section>
 
-             Projects List 
+            <!-- Projects List -->
             <section class="admin-section">
                 <h2>📋 Proyectos Existentes (<span id="projectsCount">0</span>)</h2>
-                
+
                 <div class="projects-list" id="projectsList">
-                     Los proyectos se cargarán dinámicamente 
+                    <!-- Los proyectos se cargarán dinámicamente -->
                 </div>
             </section>
         </div>
     </div>
 
-     Firebase SDKs 
-    <script type="module" src="firebase-config.js"></script>
+    <!-- Firebase SDKs -->
     <script type="module" src="admin.js"></script>
 </body>
 </html>

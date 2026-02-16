@@ -1,4 +1,8 @@
 User-agent: *
 Allow: /
+Disallow: /admin.html
+Disallow: /login.html
+Disallow: /Mis-webs/admin.html
+Disallow: /Mis-webs/login.html
 
 Sitemap: https://jhormancastella.github.io/Mis-webs/sitemap.xml
