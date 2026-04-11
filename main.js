@@ -1,4 +1,4 @@
-import { db } from "https://jesusjhorman123-group.gitlab.io/portfolio-admin/firebase-config.js"
+import { db } from "https://portfolio-admin-eef519.gitlab.io/firebase-config.js"
 import { collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"
 
 let currentWebsite = null
