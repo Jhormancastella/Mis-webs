@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -165,7 +165,10 @@
 
 <body>
   <div class="header-container">
-    <h1>🌐 Mis Webs <button class="theme-toggle" id="themeToggle" aria-label="Cambiar modo claro/oscuro">🌓</button></h1>
+    <h1>🌐 Mis Webs
+      <button class="theme-picker-btn" id="themePickerBtn" aria-label="Selector de temas" title="Cambiar tema">🎨</button>
+      <button class="mode-toggle-btn" id="modeToggleBtn" aria-label="Alternar claro/oscuro" title="Claro / Oscuro">🌓</button>
+    </h1>
     <p class="subtitle">Portfolio de proyectos web personales</p>
     <a href="https://portfolio-admin-eef519.gitlab.io/admin.html" class="admin-link" title="Panel de Administración">⚙️</a>
   </div>
@@ -190,6 +193,11 @@
         <div class="spinner"></div>
         <span class="loading-text">Cargando proyectos...</span>
       </div>
+    </div>
+
+    <!-- === CARRUSEL (solo logos) — dentro del main-content === -->
+    <div class="carousel-wrapper" id="carouselWrapper">
+      <div class="carousel-track" id="carouselTrack"></div>
     </div>
 
     <div class="no-results" id="noResults">
@@ -250,6 +258,20 @@
         <button type="button" class="modal-btn btn-visit" id="visitWebsiteBtn">Ir al Sitio</button>
       </div>
     </div>
+  </div>
+
+  <!-- === PANEL DE TEMAS === -->
+  <div class="theme-panel-overlay" id="themePanelOverlay"></div>
+  <div class="theme-panel" id="themePanel" role="dialog" aria-label="Selector de temas">
+    <div class="theme-panel-header">
+      <span>🎨 Elige un tema</span>
+      <button class="theme-panel-close" id="themePanelClose" aria-label="Cerrar panel">✕</button>
+    </div>
+    <div class="theme-panel-restore" id="themePanelRestore" style="display:none">
+      <span>↩ Restaurar tema anterior</span>
+      <button id="restoreThemeBtn">Restaurar</button>
+    </div>
+    <div class="theme-grid" id="themeGrid"></div>
   </div>
 
   <script type="module" src="main.js"></script>
