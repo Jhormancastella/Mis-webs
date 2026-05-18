@@ -181,18 +181,34 @@
       </div>
     </div>
 
-    <div class="project-counter">
-      <span id="projectCount">Cargando proyectos...</span>
-    </div>
+<div class="project-counter">
+       <span id="projectCount">Cargando proyectos...</span>
+     </div>
 
-    <div class="website-grid" id="websiteGrid">
-      <div class="loading-container">
-        <div class="spinner"></div>
-        <span class="loading-text">Cargando proyectos...</span>
-      </div>
-    </div>
+     <div class="pagination-container" id="paginationContainer">
+       <div class="items-per-page">
+         <label for="itemsPerPage">Mostrar:</label>
+         <select id="itemsPerPage">
+           <option value="8">8 por página</option>
+           <option value="12">12 por página</option>
+           <option value="16">16 por página</option>
+           <option value="all">Ver todos</option>
+         </select>
+       </div>
+       <button class="pagination-btn view-all" id="viewAllBtn">Ver Todos</button>
+       <button class="pagination-btn" id="prevPageBtn">‹</button>
+       <span id="pageNumbers"></span>
+       <button class="pagination-btn" id="nextPageBtn">›</button>
+     </div>
 
-    <div class="no-results" id="noResults">
+     <div class="website-grid" id="websiteGrid">
+       <div class="loading-container">
+         <div class="spinner"></div>
+         <span class="loading-text">Cargando proyectos...</span>
+       </div>
+     </div>
+
+     <div class="no-results" id="noResults">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
         <path d="M19.5 12c0-1.58-.47-3.04-1.28-4.26l-1.42 1.42A5.5 5.5 0 1 1 12 6.5c1.03 0 1.99.28 2.82.77l1.42-1.42A7.474 7.474 0 0 0 12 4.5a7.5 7.5 0 1 0 7.5 7.5zM12 20a8 8 0 1 1 0-16 8 8 0 0 1 0 16z"/>
       </svg>

@@ -7,6 +7,9 @@ let currentFilter = "all"
 let allProjects = []
 let lastFocusedElement = null
 let modalListenersAttached = false
+let currentPage = 1
+let itemsPerPage = 8
+let viewAllMode = false
 
 const FALLBACK_ICON =
   "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzk5OSI+PHBhdGggZD0iTTMuOSAxMmMwLTEuNzEgMS4zOS0zLjEgMy4xLTMuMWg0VjdIN2MtMi43NiAwLTUgMi4yNC01IDVzMi4yNCA1IDUgNWg0di0xLjlIN2MtMS43MSAwLTMuMS0xLjM5LTMuMS0zLjF6TTggMTNoOHYtMkg4djJ6TTE5IDdoLTR2MS45aDRjMS43MSAwIDMuMSAxLjM5IDMuMSAzLjFzLTEuMzkgMy4xLTMuMSAzLjFoLTR2Mmg0YzIuNzYgMCA1LTIuMjQgNS01cy0yLjI0LTUtNS01eiIvPjwvc3ZnPg=="
@@ -18,6 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupScrollTop()
   setupModalControls()
   setCurrentYear()
+  setupPagination()
   loadProjects()
 })
 
@@ -56,7 +60,8 @@ function setupFilters() {
       filterButtons.forEach((b) => b.classList.remove("active"))
       this.classList.add("active")
       currentFilter = this.dataset.filter || "all"
-      filterProjects()
+      resetPagination()
+      filterAndRender()
     })
   })
 }
@@ -64,39 +69,75 @@ function setupFilters() {
 function setupSearch() {
   const searchBar = document.getElementById("searchBar")
   if (searchBar) {
-    searchBar.addEventListener("input", filterProjects)
+    searchBar.addEventListener("input", () => {
+      resetPagination()
+      filterAndRender()
+    })
   }
 }
 
-function filterProjects() {
+function filterAndRender() {
   const searchValue = document.getElementById("searchBar")?.value || ""
   const searchTerm = searchValue.toLowerCase()
-  const cards = document.querySelectorAll(".website-card")
-  let visibleCount = 0
-
-  cards.forEach((card) => {
-    const category = card.dataset.category || ""
-    const websiteData = card.websiteData || {}
-    const name = safeText(websiteData.name).toLowerCase()
-    const description = safeText(websiteData.description).toLowerCase()
-
+  
+  const filteredProjects = allProjects.filter(project => {
+    const category = safeText(project.category) || "other"
+    const name = safeText(project.name).toLowerCase()
+    const description = safeText(project.description).toLowerCase()
+    
     const matchesFilter = currentFilter === "all" || category === currentFilter
     const matchesSearch = name.includes(searchTerm) || description.includes(searchTerm)
-
-    if (matchesFilter && matchesSearch) {
-      card.classList.remove("hidden")
-      visibleCount += 1
-    } else {
-      card.classList.add("hidden")
-    }
+    
+    return matchesFilter && matchesSearch
   })
-
-  updateProjectCount(visibleCount)
-
+  
+  renderProjects(filteredProjects)
+  updatePagination(filteredProjects.length)
+  
   const noResults = document.getElementById("noResults")
   if (noResults) {
-    noResults.classList.toggle("show", visibleCount === 0)
+    noResults.classList.toggle("show", filteredProjects.length === 0)
   }
+}
+
+function renderProjects(projects) {
+  const grid = document.getElementById("websiteGrid")
+  if (!grid) return
+
+  grid.innerHTML = ""
+
+  if (projects.length === 0) {
+    const emptyMessage = document.createElement("p")
+    emptyMessage.style.textAlign = "center"
+    emptyMessage.style.gridColumn = "1/-1"
+    emptyMessage.style.padding = "40px"
+    emptyMessage.style.color = "#666"
+    emptyMessage.textContent = "No hay proyectos disponibles. Agrega uno desde el panel de administración."
+    grid.appendChild(emptyMessage)
+    updateProjectCount(0)
+    return
+  }
+
+  let projectsToRender = projects
+  if (!viewAllMode) {
+    const start = (currentPage - 1) * itemsPerPage
+    const end = start + itemsPerPage
+    projectsToRender = projects.slice(start, end)
+  }
+
+  projectsToRender.forEach((project, index) => {
+    grid.appendChild(createProjectCard(project, index))
+  })
+
+  updateProjectCount(viewAllMode ? projects.length : projectsToRender.length)
+  setupCardListeners()
+}
+
+function resetPagination() {
+  currentPage = 1
+  viewAllMode = false
+  const itemsSelect = document.getElementById("itemsPerPage")
+  if (itemsSelect) itemsSelect.value = "8"
 }
 
 function updateProjectCount(count) {
@@ -133,7 +174,7 @@ async function loadProjects() {
       allProjects.push({ id: docSnap.id, ...docSnap.data() })
     })
 
-    renderProjects()
+    filterAndRender()
   } catch (error) {
     console.error("Error loading projects:", error)
     const projectCount = document.getElementById("projectCount")
@@ -141,32 +182,6 @@ async function loadProjects() {
       projectCount.textContent = "Error al cargar proyectos"
     }
   }
-}
-
-function renderProjects() {
-  const grid = document.getElementById("websiteGrid")
-  if (!grid) return
-
-  grid.innerHTML = ""
-
-  if (allProjects.length === 0) {
-    const emptyMessage = document.createElement("p")
-    emptyMessage.style.textAlign = "center"
-    emptyMessage.style.gridColumn = "1/-1"
-    emptyMessage.style.padding = "40px"
-    emptyMessage.style.color = "#666"
-    emptyMessage.textContent = "No hay proyectos disponibles. Agrega uno desde el panel de administración."
-    grid.appendChild(emptyMessage)
-    updateProjectCount(0)
-    return
-  }
-
-  allProjects.forEach((project, index) => {
-    grid.appendChild(createProjectCard(project, index))
-  })
-
-  updateProjectCount(allProjects.length)
-  setupCardListeners()
 }
 
 function createProjectCard(project, index) {
@@ -240,6 +255,126 @@ function setupCardListeners() {
       }
     })
   })
+}
+
+function setupPagination() {
+  const itemsSelect = document.getElementById("itemsPerPage")
+  const prevBtn = document.getElementById("prevPageBtn")
+  const nextBtn = document.getElementById("nextPageBtn")
+  const viewAllBtn = document.getElementById("viewAllBtn")
+
+  if (itemsSelect) {
+    itemsSelect.addEventListener("change", () => {
+      const value = itemsSelect.value
+      if (value === "all") {
+        viewAllMode = true
+        currentPage = 1
+        itemsPerPage = allProjects.length
+        filterAndRender()
+      } else {
+        itemsPerPage = parseInt(value)
+        viewAllMode = false
+        currentPage = 1
+        filterAndRender()
+      }
+    })
+  }
+
+  if (prevBtn) {
+    prevBtn.addEventListener("click", () => {
+      if (currentPage > 1) {
+        currentPage -= 1
+        filterAndRender()
+      }
+    })
+  }
+
+  if (nextBtn) {
+    nextBtn.addEventListener("click", () => {
+      const filteredCount = getFilteredCount()
+      if (!viewAllMode) {
+        const maxPage = Math.ceil(filteredCount / itemsPerPage)
+        if (currentPage < maxPage) {
+          currentPage += 1
+          filterAndRender()
+        }
+      }
+    })
+  }
+
+  if (viewAllBtn) {
+    viewAllBtn.addEventListener("click", () => {
+      viewAllMode = true
+      itemsPerPage = allProjects.length
+      currentPage = 1
+      filterAndRender()
+    })
+  }
+}
+
+function getFilteredCount() {
+  const searchValue = document.getElementById("searchBar")?.value || ""
+  const searchTerm = searchValue.toLowerCase()
+  
+  return allProjects.filter(project => {
+    const category = safeText(project.category) || "other"
+    const name = safeText(project.name).toLowerCase()
+    const description = safeText(project.description).toLowerCase()
+    
+    const matchesFilter = currentFilter === "all" || category === currentFilter
+    const matchesSearch = name.includes(searchTerm) || description.includes(searchTerm)
+    
+    return matchesFilter && matchesSearch
+  }).length
+}
+
+function updatePagination(totalItems) {
+  const pageNumbers = document.getElementById("pageNumbers")
+  const prevBtn = document.getElementById("prevPageBtn")
+  const nextBtn = document.getElementById("nextPageBtn")
+  const viewAllBtn = document.getElementById("viewAllBtn")
+  const paginationContainer = document.getElementById("paginationContainer")
+
+  if (viewAllMode) {
+    paginationContainer.style.display = "none"
+    return
+  }
+
+  paginationContainer.style.display = "flex"
+
+  const totalPages = Math.ceil(totalItems / itemsPerPage)
+
+  if (totalPages <= 1) {
+    if (pageNumbers) pageNumbers.innerHTML = ""
+    if (prevBtn) prevBtn.disabled = true
+    if (nextBtn) nextBtn.disabled = true
+    return
+  }
+
+  if (prevBtn) prevBtn.disabled = currentPage === 1
+  if (nextBtn) nextBtn.disabled = currentPage === totalPages
+
+  if (pageNumbers) {
+    pageNumbers.innerHTML = ""
+    const maxVisible = 5
+    let start = Math.max(1, currentPage - Math.floor(maxVisible / 2))
+    let end = Math.min(totalPages, start + maxVisible - 1)
+
+    if (end - start < maxVisible - 1) {
+      start = Math.max(1, end - maxVisible + 1)
+    }
+
+    for (let i = start; i <= end; i++) {
+      const btn = document.createElement("button")
+      btn.className = `pagination-btn ${i === currentPage ? "active" : ""}`
+      btn.textContent = i
+      btn.addEventListener("click", () => {
+        currentPage = i
+        filterAndRender()
+      })
+      pageNumbers.appendChild(btn)
+    }
+  }
 }
 
 function setupModalControls() {
