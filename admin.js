@@ -163,6 +163,7 @@ function setupProjectForm() {
 
       resetForm()
       await loadProjects()
+      window.location.href = 'index.html'
     } catch (error) {
       console.error("Error al guardar proyecto:", error)
       alert("❌ Error al guardar el proyecto. Intenta de nuevo.")

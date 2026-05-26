@@ -34,7 +34,7 @@ h1 {
   margin-bottom: 10px;
   display: inline-block;
   position: relative;
-  padding-right: 50px;
+  padding-right: 60px;
 }
 
 body.dark h1 {
@@ -1121,14 +1121,21 @@ body.dark .project-item-description {
   
   h1 {
     font-size: 1.6rem;
-    padding-right: 40px;
+    padding-right: 50px;
     display: block;
     margin-bottom: 8px;
   }
   
+  .title-icon {
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+    margin-right: 4px;
+  }
+  
   .admin-link {
     position: absolute;
-    right: 44px;
+    right: 54px;
     top: 8px;
     transform: none;
     font-size: 1.3rem;
@@ -1462,10 +1469,10 @@ body.dark .project-item-description {
     font-size: 12px;
   }
   
-  h1 {
-    font-size: 1.4rem;
-    padding-right: 36px;
-  }
+h1 {
+     font-size: 1.4rem;
+     padding-right: 40px;
+   }
   
   .admin-link {
     right: 40px;
@@ -1526,8 +1533,8 @@ body.dark .project-item-description {
 
 /* === TITLE ICON ANIMADO === */
 .title-icon {
-  width: 32px;
-  height: 32px;
+  width: 24px;
+  height: 24px;
   vertical-align: middle;
-  margin-right: 8px;
+  margin-right: 6px;
 }
