@@ -6,14 +6,14 @@
     <title>Panel de Administración - Portfolio</title>
     <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
     <meta name="googlebot" content="noindex,nofollow,noarchive,nosnippet">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>⚙️</text></svg>">
     <link rel="stylesheet" href="style.css">
+    <link id="favicon" rel="icon" type="image/png" href="img/favicon-1.png">
 </head>
 <body>
     <!-- Login Screen -->
     <div id="loginScreen" class="auth-container">
         <div class="auth-card">
-            <h1>🔐 Panel de Administración</h1>
+            <h1><img id="titleIcon" src="img/favicon-1.png" alt="🔐" class="title-icon"> Panel de Administración</h1>
             <p class="auth-subtitle">Ingresa tus credenciales para continuar</p>
 
             <form id="loginForm" class="auth-form">
@@ -38,7 +38,7 @@
     <!-- Admin Panel -->
     <div id="adminPanel" class="admin-panel" style="display: none;">
         <header class="admin-header">
-            <h1>⚙️ Panel de Administración</h1>
+            <h1><img id="titleIconHeader" src="img/favicon-1.png" alt="⚙️" class="title-icon"> Panel de Administración</h1>
             <div class="admin-actions">
                 <button id="themeToggle" class="btn-icon" title="Cambiar tema" type="button">🌓</button>
                 <button id="logoutBtn" class="btn-secondary" type="button">Cerrar Sesión</button>
@@ -109,6 +109,28 @@
     </div>
 
     <!-- Firebase SDKs -->
+    <script>
+    const imagenesFavicon = [
+      'img/favicon-1.png',
+      'img/favicon-2.png',
+      'img/favicon-3.png',
+      'img/favicon-4.png',
+      'img/favicon-5.png'
+    ];
+    let indiceActual = 0;
+    const elementoFavicon = document.getElementById('favicon');
+    const titleIcon = document.getElementById('titleIcon');
+    const titleIconHeader = document.getElementById('titleIconHeader');
+
+    function animarFavicon() {
+      indiceActual = (indiceActual + 1) % imagenesFavicon.length;
+      elementoFavicon.href = imagenesFavicon[indiceActual];
+      if (titleIcon) titleIcon.src = imagenesFavicon[indiceActual];
+      if (titleIconHeader) titleIconHeader.src = imagenesFavicon[indiceActual];
+    }
+
+    setInterval(animarFavicon, 300);
+  </script>
     <script type="module" src="admin.js"></script>
 </body>
 </html>

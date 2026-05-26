@@ -1523,3 +1523,11 @@ body.dark .project-item-description {
     margin-top: 0;
   }
 }
+
+/* === TITLE ICON ANIMADO === */
+.title-icon {
+  width: 32px;
+  height: 32px;
+  vertical-align: middle;
+  margin-right: 8px;
+}

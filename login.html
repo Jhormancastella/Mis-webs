@@ -7,11 +7,12 @@
     <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
     <meta name="googlebot" content="noindex,nofollow,noarchive,nosnippet">
     <link rel="stylesheet" href="style.css">
+    <link id="favicon" rel="icon" type="image/png" href="img/favicon-1.png">
 </head>
 <body>
     <div class="auth-container">
         <div class="auth-card">
-            <h1>🔐 Acceso Admin</h1>
+            <h1><img id="titleIcon" src="img/favicon-1.png" alt="🔐" class="title-icon"> Acceso Admin</h1>
             <p class="auth-subtitle">Inicia sesión para ir al panel de administración</p>
 
             <form id="loginForm" class="auth-form">
@@ -34,6 +35,26 @@
         </div>
     </div>
 
+    <script>
+    const imagenesFavicon = [
+      'img/favicon-1.png',
+      'img/favicon-2.png',
+      'img/favicon-3.png',
+      'img/favicon-4.png',
+      'img/favicon-5.png'
+    ];
+    let indiceActual = 0;
+    const elementoFavicon = document.getElementById('favicon');
+    const titleIcon = document.getElementById('titleIcon');
+
+    function animarFavicon() {
+      indiceActual = (indiceActual + 1) % imagenesFavicon.length;
+      elementoFavicon.href = imagenesFavicon[indiceActual];
+      titleIcon.src = imagenesFavicon[indiceActual];
+    }
+
+    setInterval(animarFavicon, 300);
+  </script>
     <script type="module" src="login.js"></script>
 </body>
 </html>

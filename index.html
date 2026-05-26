@@ -6,7 +6,7 @@
   <title>Mis Webs - Portfolio</title>
   <meta name="description" content="Portfolio de proyectos web de Jhorman Jesús Castellanos Morales">
   <meta name="author" content="Jhorman Jesús Castellanos Morales">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🌐</text></svg>">
+  <link id="favicon" rel="icon" type="image/png" href="img/favicon-1.png">
   <link rel="stylesheet" href="style.css">
   
   <!-- === AÑADIR ESTA LÍNEA PARA LOS ICONOS === -->
@@ -47,8 +47,8 @@
       border-top-color: #60a5fa;
     }
 
-    .dark-mode .loading-text {
-      color: #d1d5db;
+.dark-mode .loading-text {
+       color: #d1d5db;
     }
 
     .project-counter {
@@ -165,7 +165,7 @@
 
 <body>
   <div class="header-container">
-    <h1>🌐 Mis Webs <button class="theme-toggle" id="themeToggle" aria-label="Cambiar modo claro/oscuro">🌓</button></h1>
+    <h1><img id="titleIcon" src="img/favicon-1.png" alt="🌐" class="title-icon"> Mis Webs <button class="theme-toggle" id="themeToggle" aria-label="Cambiar modo claro/oscuro">🌓</button></h1>
     <p class="subtitle">Portfolio de proyectos web personales</p>
     <a href="admin.html" class="admin-link" title="Panel de Administración">⚙️</a>
   </div>
@@ -268,6 +268,26 @@
     </div>
   </div>
 
+  <script>
+    const imagenesFavicon = [
+      'img/favicon-1.png',
+      'img/favicon-2.png',
+      'img/favicon-3.png',
+      'img/favicon-4.png',
+      'img/favicon-5.png'
+    ];
+    let indiceActual = 0;
+    const elementoFavicon = document.getElementById('favicon');
+    const titleIcon = document.getElementById('titleIcon');
+
+    function animarFavicon() {
+      indiceActual = (indiceActual + 1) % imagenesFavicon.length;
+      elementoFavicon.href = imagenesFavicon[indiceActual];
+      titleIcon.src = imagenesFavicon[indiceActual];
+    }
+
+    setInterval(animarFavicon, 300);
+  </script>
   <script type="module" src="firebase-config.js"></script>
   <script type="module" src="main.js"></script>
 

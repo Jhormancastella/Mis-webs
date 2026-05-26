@@ -1,0 +1,14 @@
+# Dependencias
+node_modules/
+
+# Archivos de desarrollo
+*.log
+.DS_Store
+Thumbs.db
+
+# Archivos originales (las versiones transparent se usan)
+img/1.png
+img/2.png
+img/2.1.png
+img/*.jpeg
+img/*-transparent.png
