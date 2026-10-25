@@ -35,9 +35,13 @@
     <div class="flex flex-col items-center gap-2 relative">
 
       <div class="absolute right-0 top-0 flex items-center gap-2">
-        <a href="admin.html" title="Panel de Administracion"
+        <button id="themeSettingsButton" type="button" aria-label="Abrir selector de temas" aria-expanded="false" aria-controls="themePanel" title="Selector de temas"
            class="w-10 h-10 flex items-center justify-center rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 hover:text-brand-500 hover:border-brand-400 transition-all duration-200 shadow-sm text-lg">
-          ⚙️
+          <i class="bi bi-palette2" aria-hidden="true"></i>
+        </button>
+        <a href="admin.html" title="Panel de administración" aria-label="Abrir panel de administración"
+           class="w-10 h-10 flex items-center justify-center rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 hover:text-brand-500 hover:border-brand-400 transition-all duration-200 shadow-sm text-lg">
+          <i class="bi bi-gear" aria-hidden="true"></i>
         </a>
         <button id="themeToggle" aria-label="Cambiar modo claro/oscuro"
                 class="theme-toggle w-10 h-10 flex items-center justify-center rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 transition-all duration-200 shadow-sm">
@@ -157,6 +161,35 @@
       </div>
     </div>
   </footer>
+
+  <section id="themePanel" class="theme-panel" aria-label="Selector de temas" aria-hidden="true">
+    <div class="theme-panel__heading">
+      <div>
+        <p class="theme-panel__eyebrow">PERSONALIZACIÓN</p>
+        <h2>Selector de temas</h2>
+      </div>
+      <button id="closeThemePanel" class="theme-panel__close" type="button" aria-label="Cerrar selector">&times;</button>
+    </div>
+    <label class="theme-panel__label" for="themeSelect">Experiencia visual</label>
+    <select id="themeSelect" class="theme-panel__select">
+      <option value="normal">🏠 0 · Normal — diseño original</option>
+      <option value="neon-tech">⚡ 1 · Neon-Tech — carrusel 3D</option>
+      <option value="minimalist-glass">💎 2 · Minimalist Glass — abanico</option>
+      <option value="arcade-8bit">🎮 3 · Arcade 8-Bit — selección de personajes</option>
+      <option value="retro-os">🖥️ 4 · Retro OS — ventanas de escritorio</option>
+      <option value="matrix">🟩 5 · Matrix Digital — terminal</option>
+      <option value="cyber-chaos">👾 6 · Cyber-Chaos — grid reactivo</option>
+    </select>
+    <div id="themeModeControl" class="theme-panel__mode" hidden>
+      <div>
+        <span class="theme-panel__label">Modo de color</span>
+        <span id="themeModeLabel" class="theme-panel__mode-value">Oscuro</span>
+      </div>
+      <button id="themeModeToggle" class="theme-switch" type="button" role="switch" aria-checked="true" aria-label="Alternar modo claro y oscuro">
+        <span></span>
+      </button>
+    </div>
+  </section>
 
   <!-- Scroll to top -->
   <button id="scrollTop" aria-label="Volver arriba"

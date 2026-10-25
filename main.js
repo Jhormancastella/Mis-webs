@@ -1,5 +1,6 @@
 import { db } from "./firebase-config.js"
 import { collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"
+import { initializeThemeSwitcher, refreshThemeLayout } from "./themes.js"
 
 let currentWebsite = null
 let isDarkMode = false
@@ -15,6 +16,7 @@ const FALLBACK_ICON =
   "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzk5OSI+PHBhdGggZD0iTTMuOSAxMmMwLTEuNzEgMS4zOS0zLjEgMy4xLTMuMWg0VjdIN2MtMi43NiAwLTUgMi4yNC01IDVzMi4yNCA1IDUgNWg0di0xLjlIN2MtMS43MSAwLTMuMS0xLjM5LTMuMS0zLjF6TTggMTNoOHYtMkg4djJ6TTE5IDdoLTR2MS45aDRjMS43MSAwIDMuMSAxLjM5IDMuMSAzLjFzLTEuMzkgMy4xLTMuMSAzLjFoLTR2Mmg0YzIuNzYgMCA1LTIuMjQgNS01cy0yLjI0LTUtNS01eiIvPjwvc3ZnPg=="
 
 document.addEventListener("DOMContentLoaded", () => {
+  initializeThemeSwitcher()
   setupThemeToggle()
   setupFilters()
   setupSearch()
@@ -41,9 +43,13 @@ function setupThemeToggle() {
 
   isDarkMode = localStorage.getItem("darkMode") === "true"
   document.documentElement.classList.toggle("dark", isDarkMode)
-  updateThemeIcon(icon, isDarkMode)
+  if (!document.body.dataset.theme) updateThemeIcon(icon, isDarkMode)
 
   toggle.addEventListener("click", () => {
+    if (document.body.dataset.theme) {
+      document.dispatchEvent(new CustomEvent("portfolio:toggle-theme-mode"))
+      return
+    }
     isDarkMode = !isDarkMode
     document.documentElement.classList.toggle("dark", isDarkMode)
     localStorage.setItem("darkMode", String(isDarkMode))
@@ -105,7 +111,11 @@ function renderProjects(projects) {
   const grid = document.getElementById("websiteGrid")
   if (!grid) return
   grid.innerHTML = ""
-  if (projects.length === 0) { updateProjectCount(0); return }
+  if (projects.length === 0) {
+    updateProjectCount(0)
+    refreshThemeLayout()
+    return
+  }
   let projectsToRender = projects
   if (!viewAllMode) {
     const start = (currentPage - 1) * itemsPerPage
@@ -114,6 +124,7 @@ function renderProjects(projects) {
   projectsToRender.forEach((project, index) => grid.appendChild(createProjectCard(project, index)))
   updateProjectCount(viewAllMode ? projects.length : projectsToRender.length)
   setupCardListeners()
+  refreshThemeLayout()
 }
 
 function resetPagination() {
