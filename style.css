@@ -259,7 +259,7 @@ body[data-theme] > header, body[data-theme] > main, body[data-theme] > footer { 
 body[data-theme] main { max-width: 76rem; }
 body[data-theme] #websiteGrid { display: block !important; }
 body[data-theme] .theme-layout { width: 100%; }
-body[data-theme] .website-card { color: var(--text-color) !important; background: var(--card-bg) !important; border-color: color-mix(in srgb, var(--accent-color), transparent 48%) !important; font-family: var(--font-family); }
+body[data-theme] .website-card { color: var(--text-color) !important; background: var(--card-bg) !important; border-color: color-mix(in srgb, var(--accent-color), transparent 48%) !important; font-family: var(--font-family); opacity: 1; animation: none; }
 body[data-theme] .website-card .website-name { color: var(--text-color) !important; }
 body[data-theme] .website-card .website-description { color: color-mix(in srgb, var(--text-color), transparent 22%); }
 body[data-theme] #searchBar, body[data-theme] #itemsPerPage, body[data-theme] .filter-btn, body[data-theme] .pagination-btn { color: var(--text-color) !important; background: var(--card-bg) !important; border-color: color-mix(in srgb, var(--accent-color), transparent 48%) !important; }

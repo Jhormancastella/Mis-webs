@@ -209,7 +209,9 @@ function createCarousel(grid, cards) {
   const update = () => {
     track.style.setProperty("--carousel-index", String(index))
     track.querySelectorAll(".website-card").forEach((card, cardIndex) => {
-      const offset = ((cardIndex - index + cards.length + 1) % cards.length) - 1
+      const offset = cards.length === 1
+        ? 0
+        : ((cardIndex - index + cards.length + 1) % cards.length) - 1
       card.style.setProperty("--carousel-offset", String(offset))
       card.style.setProperty("--carousel-shift", `${offset * 62}%`)
       card.style.setProperty("--carousel-rotation", `${offset * -24}deg`)
