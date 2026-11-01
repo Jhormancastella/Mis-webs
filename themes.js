@@ -136,7 +136,7 @@ export function refreshThemeLayout() {
       createMatrixTerminal(grid, cards)
       break
     case "cyber-chaos":
-      createChaosGrid(grid, cards)
+      createVinylAlbumGrid(grid, cards)
       break
   }
 }
@@ -173,6 +173,8 @@ function destroyLayout() {
       card.style.removeProperty("--carousel-scale")
       card.style.removeProperty("--carousel-opacity")
       card.style.removeProperty("--glitch-delay")
+      card.classList.remove("vinyl-album")
+      card.querySelector(".vinyl-record")?.remove()
       card.removeAttribute("aria-hidden")
       card.tabIndex = 0
       grid.appendChild(card)
@@ -433,41 +435,21 @@ function drawMatrix(canvas) {
   draw()
 }
 
-function createChaosGrid(grid, cards) {
-  const shell = createLayoutShell(grid, "chaos-grid")
-  const controller = new AbortController()
-  activeLayoutCleanup = controller
-  cards.forEach((card, index) => {
-    const x = ((index * 37) % 49) - 24
-    const y = ((index * 23) % 41) - 20
-    card.style.setProperty("--chaos-x", `${x}px`)
-    card.style.setProperty("--chaos-y", `${y}px`)
-    card.style.setProperty("--glitch-delay", `${index * -0.3}s`)
+function createVinylAlbumGrid(grid, cards) {
+  const shell = createLayoutShell(grid, "vinyl-albums")
+  cards.forEach((card) => {
+    const title = card.querySelector(".website-name")?.textContent?.trim() || "Proyecto"
+    const record = document.createElement("span")
+    record.className = "vinyl-record"
+    record.setAttribute("aria-hidden", "true")
+    const label = document.createElement("span")
+    label.className = "vinyl-record__label"
+    label.textContent = title
+    record.appendChild(label)
+    card.classList.add("vinyl-album")
+    card.prepend(record)
     shell.appendChild(card)
   })
-  const move = (event) => {
-    const bounds = shell.getBoundingClientRect()
-    const mouseX = (event.clientX - bounds.left) / bounds.width - 0.5
-    const mouseY = (event.clientY - bounds.top) / bounds.height - 0.5
-    shell.style.setProperty("--mouse-x", `${mouseX}`)
-    shell.style.setProperty("--mouse-y", `${mouseY}`)
-    cards.forEach((card) => {
-      const cardBounds = card.getBoundingClientRect()
-      const deltaX = (event.clientX - (cardBounds.left + cardBounds.width / 2)) / bounds.width
-      const deltaY = (event.clientY - (cardBounds.top + cardBounds.height / 2)) / bounds.height
-      card.style.setProperty("--mouse-shift-x", `${Math.max(-18, Math.min(18, -deltaX * 24))}px`)
-      card.style.setProperty("--mouse-shift-y", `${Math.max(-18, Math.min(18, -deltaY * 24))}px`)
-    })
-  }
-  shell.addEventListener("pointermove", move, { signal: controller.signal })
-  shell.addEventListener("pointerleave", () => {
-    shell.style.setProperty("--mouse-x", "0")
-    shell.style.setProperty("--mouse-y", "0")
-    cards.forEach((card) => {
-      card.style.setProperty("--mouse-shift-x", "0px")
-      card.style.setProperty("--mouse-shift-y", "0px")
-    })
-  }, { signal: controller.signal })
 }
 
 function createLayoutButton(label, text, className = "") {
