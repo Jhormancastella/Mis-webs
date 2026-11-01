@@ -19,7 +19,7 @@ Explóralo y dime qué te parece.
 ## ✨ Qué incluye
 
 ### 🎯 Portfolio público
-- Carga dinámica desde Firestore (sin recargar)
+- Carga de proyectos desde Firestore
 - Diseño responsive (desktop, tablet y móvil)
 - Búsqueda en tiempo real + filtros por categoría
 - Modo oscuro/claro con persistencia
@@ -27,7 +27,7 @@ Explóralo y dime qué te parece.
 
 ### 🔐 Panel de administración
 - Login con Firebase Authentication (Email/Password)
-- CRUD completo con onSnapshot (actualización inmediata)
+- CRUD completo con recarga de la lista después de cada cambio
 - Interfaz con validación visual y confirmaciones de seguridad
 - Rutas protegidas para admins
 
@@ -147,7 +147,7 @@ Explóralo y dime qué te parece.
 ```mermaid
 graph TD
   U[Usuario] --> FE[Frontend<br/>HTML/CSS/JS]
-  FE -->|onSnapshot / fetch| FS[(Cloud Firestore)]
+  FE -->|Consultas y escrituras| FS[(Cloud Firestore)]
   FE --> AU[Firebase Auth]
   AU --> FE
   FS --> FE
@@ -175,7 +175,7 @@ sequenceDiagram
   Auth-->>UI: uid/token (éxito)
   A->>UI: Crear/Editar/Eliminar proyecto
   UI->>DB: set()/update()/delete()
-  DB-->>UI: onSnapshot() (cambios en tiempo real)
+  UI->>DB: getDocs() (recargar lista)
   UI-->>A: Lista y preview actualizados
 ```
 

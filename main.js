@@ -130,6 +130,7 @@ function renderProjects(projects) {
 function resetPagination() {
   currentPage = 1
   viewAllMode = false
+  itemsPerPage = 8
   const itemsSelect = document.getElementById("itemsPerPage")
   if (itemsSelect) itemsSelect.value = "8"
 }
@@ -259,6 +260,7 @@ function setupCardListeners() {
   document.querySelectorAll(".website-card").forEach((card) => {
     card.addEventListener("click", () => openModal(card))
     card.addEventListener("keydown", (e) => {
+      if (e.target !== card) return
       if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openModal(card) }
     })
   })
