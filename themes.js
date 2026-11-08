@@ -236,6 +236,7 @@ function createCarousel(grid, cards) {
       move(event.deltaY > 0 || event.deltaX > 0 ? 1 : -1)
     }
   }, { passive: false, signal: controller.signal })
+  addSwipeNavigation(viewport, move, controller.signal)
   document.addEventListener("keydown", (event) => {
     if (!grid.contains(document.activeElement)) return
     if (event.key === "ArrowRight") move(1)
@@ -279,6 +280,7 @@ function createGlassStack(grid, cards) {
     update()
   }, { signal: controller.signal })
   next.addEventListener("click", move, { signal: controller.signal })
+  addSwipeNavigation(stage, move, controller.signal)
   stage.addEventListener("wheel", (event) => {
     if (Math.abs(event.deltaY) < 8) return
     event.preventDefault()
@@ -311,6 +313,7 @@ function createArcadeSelect(grid, cards) {
   cards.forEach((card) => {
     selectGrid.appendChild(card)
     card.addEventListener("mouseenter", () => updatePreview(card), { signal: controller.signal })
+    card.addEventListener("click", () => updatePreview(card), { signal: controller.signal })
     card.addEventListener("focus", () => updatePreview(card), { signal: controller.signal })
   })
   shell.append(selectGrid, preview)
@@ -459,6 +462,32 @@ function createLayoutButton(label, text, className = "") {
   button.setAttribute("aria-label", label)
   button.textContent = text
   return button
+}
+
+function addSwipeNavigation(element, move, signal) {
+  let start = null
+  let suppressClick = false
+
+  element.addEventListener("pointerdown", (event) => {
+    suppressClick = false
+    if (event.pointerType === "touch") start = { id: event.pointerId, x: event.clientX, y: event.clientY }
+  }, { signal })
+  element.addEventListener("pointerup", (event) => {
+    if (!start || start.id !== event.pointerId) return
+    const deltaX = event.clientX - start.x
+    const deltaY = event.clientY - start.y
+    start = null
+    if (Math.abs(deltaX) < 40 || Math.abs(deltaX) <= Math.abs(deltaY)) return
+    suppressClick = true
+    move(deltaX < 0 ? 1 : -1)
+  }, { signal })
+  element.addEventListener("pointercancel", () => { start = null }, { signal })
+  element.addEventListener("click", (event) => {
+    if (!suppressClick) return
+    event.preventDefault()
+    event.stopPropagation()
+    suppressClick = false
+  }, { capture: true, signal })
 }
 
 function createWindowControl(text, label) {
